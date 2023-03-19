@@ -1,0 +1,41 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("Tykhe - Mean Machine system", overlay=true)
+
+
+
+hull(i,x) =>
+    wma(2*wma(i, x/2)-wma(i, x), round(sqrt(x)))
+    
+
+
+
+
+src = input(ohlc4)
+
+smoothness = input(10)
+
+
+h = highest(high, 10)
+l = lowest(low, 10)
+
+hl = (h+l) / 2
+
+
+
+short_period = input(21)
+
+
+
+quick = sma(hl, smoothness)
+
+short_slow = hull(quick, short_period)
+short_fast = hull(hl, short_period)
+
+short_slow_plot = plot(short_slow, color=color.red)
+short_fast_plot = plot(short_fast, color=color.green)
+
+//short_mean_color = short_slow > short_fast ?  color.red : color.green 
+//fill(short_slow_plot, short_fast_plot, color=short_mean_color )

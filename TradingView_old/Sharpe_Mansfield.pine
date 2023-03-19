@@ -1,0 +1,74 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+//@version=4
+study("Tykhe - Rolling Sharpe Ratio Mansfield", shorttitle="Tykhe - SM")
+
+//--------------------------- Opciones ----------------------------------- 
+src = input(close, title="Fuente: ")
+
+
+len = input(200, title="Length: ", minval=0)
+
+use_rf = input(type=input.bool, defval=false, title="¿Usar tasa libre de riesgo?")
+
+rf_sec = security(input("DTB3", title="Tasa libre de riesgo: "), timeframe.period, close)
+
+benchmark = security(input("SPY", title="Benchmark: "), timeframe.period, close)
+
+smoothness = input(defval=5, minval=0, title="Suavizado: ")
+
+mostrar_sma = input(type=input.bool, defval=true, title="¿Mostrar media móvil?")
+
+sma_period = input(200, title="Media Móvil: ", minval=0)
+
+//--------------------------- Hull Moving average -----------------------------------
+hull(x, longitud) =>
+    hullma = wma(2*wma(x, longitud/2)-wma(x, longitud), round(sqrt(longitud)))
+
+//--------------------------- Colores -----------------------------------
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+
+
+//--------------------------- Long Sharpe -----------------------------------
+
+
+rf = use_rf ? rf_sec / 100 : 0
+
+long_pc = (src - src[len]) / src
+long_std = stdev(src, len)
+long_stdaspercent = long_std / src
+long_SR = hull((long_pc - rf) / long_stdaspercent, smoothness)
+
+
+
+//--------------------------- Benchmark Sharpe -----------------------------------
+
+
+
+
+short_pc = (benchmark - benchmark[len]) / src
+short_std = stdev(benchmark, len)
+short_stdaspercent = short_std / benchmark
+short_SR = hull((short_pc - rf) / short_stdaspercent, smoothness)
+
+//______Calc
+
+sr = (sma(long_SR/short_SR, 5) / 100)
+
+sma_1 = ema(sr, sma_period)
+media = mostrar_sma ? sma_1 : na
+
+
+
+plot(sr, style=plot.style_histogram, color=long_SR < 0 ? bear_color : bull_color, linewidth=3, transp=50 )
+plot( sr, style=plot.style_line, color=indecision_color, linewidth=2, transp=50)
+
+
+
+plot(media, style=plot.style_circles, color=indecision_color, linewidth=1)
+
+hline(0, linestyle=hline.style_dashed, color=indecision_color)

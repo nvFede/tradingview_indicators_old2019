@@ -1,0 +1,16 @@
+//@version=3
+study("QS LogChange Correlation",overlay=false)
+
+jpy = security("SPX", period, close)
+
+a = close / close[1]
+pct_change = log(a) * 100
+
+regre = sma(pct_change, 5)
+
+jpyvar = log(jpy / jpy[1]) * 100
+jpy_change = sma(jpyvar, 5)
+
+plot(regre, linewidth=3, color=green)
+plot(jpy_change, linewidth=3, color=red)
+hline(0, linestyle=dashed)

@@ -1,0 +1,29 @@
+// FEDE NASDAQ 100 Above 50MA
+study(title="[nv]Stocks Above 50 & 200", overlay=false)
+
+s50 = input(title="Symbol", type=symbol, defval="S5FI")
+s200 = input(title="Symbol", type=symbol, defval="S5TH")
+
+OUT80 = input(title="Upper Line", type=float, defval=75)
+OUT50 = input(title="Middle Line", type=float, defval=50)
+OUT20 = input(title="Lower Line", type=float, defval=25)
+
+LIN1 = security(s50, period, close)
+LIN2 = security(s200, period, close)
+
+h0 = hline(OUT80)
+h1 = hline(OUT50)
+h2 = hline(OUT20)
+
+//fill(h0,h1, color= white, transp=90)
+
+hline(OUT80, linestyle = dashed, color = green)
+hline(OUT50, linestyle = dashed, color = orange)
+hline(OUT20, linestyle = dashed, color = red)
+
+s50Color = LIN1 > 50 ? green : red
+s200Color = LIN2 > 50 ? blue : purple
+
+plot(LIN1, color = s50Color, style = area)
+plot(LIN2, color = s200Color, style = area)
+

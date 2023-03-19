@@ -1,0 +1,32 @@
+//@version=3
+study("Tykhe - Rolling Information Ratio TEST", shorttitle="Tykhe - IR TEST")
+
+referencia =security("SPX", period, close)
+
+l = input(defval=52, minval=0)
+
+
+
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583enflx
+
+
+
+
+ret = log(close / close[1])
+
+ref= log(referencia / referencia[1])
+
+refsum= cum(referencia)
+
+ir = linreg(wma(ret-ref, l ) / stdev(ret - ref, l ), 10, 0)
+
+
+
+plot(ir, style = histogram, color = ir < 0 ? bear_color : bull_color, linewidth = 2)
+
+plot(wma(ir, 30), color=indecision_color)
+
+hline(0, linestyle=dashed, color=indecision_color)

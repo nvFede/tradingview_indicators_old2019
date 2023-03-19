@@ -1,0 +1,26 @@
+//@version=4
+study(title="Advance VWAP", shorttitle="VWAP", overlay=true)
+
+src = input(hlc3)
+t = time("D")
+start = na(t[1]) or t > t[1]
+
+sumSrc = src * volume
+sumVol = volume
+sumSrc := start ? sumSrc : sumSrc + sumSrc[1]
+sumVol := start ? sumVol : sumVol + sumVol[1]
+
+vwap_line = sumSrc / sumVol
+
+vwap_s1 = vwap_line + 2 * stdev(vwap_line, 20) 
+vwap_m1 = vwap_line - 2 * stdev(vwap_line, 20) 
+
+// You can use built-in vwap() function instead.
+
+vcolor = vwap_line > vwap_line[1] ? color.green : color.red
+
+plot(vwap_line, title="VWAP", color=vcolor)
+plot(vwap_m1, title="VWAP", color=color.red)
+plot(vwap_s1, title="VWAP", color=color.green)
+
+

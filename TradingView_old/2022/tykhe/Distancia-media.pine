@@ -1,0 +1,28 @@
+//@version=3
+study("Tykhe - Distancia de Media")
+
+bull_color = #058ac5
+neutral_color = #dde4c5
+bear_color = #ff583e
+
+level1 = input(5, title="nivel de sobrecompra")
+level2 = input(-5, title="nivel de sobreventa")
+
+movingType = input(title="Tipo de Media {SMA, EMA, WMA, HMA}", type=string, defval='SMA')
+itma1 = input(title="Media: ", type=integer, defval=50)
+price = close
+
+hma(_src, _length)=>
+    _return = wma((2 * wma(_src, _length / 2)) - wma(_src, _length), round(sqrt(_length)))
+
+ma1 = (movingType == "SMA") ? sma(close, itma1) : (movingType == "EMA") ? ema(close,itma1) : (movingType == "WMA") ? wma(close,itma1) : hma(close,itma1)
+
+distFromMean = ( ( price -  ma1 ) * 100 ) / ma1
+
+linecolor = distFromMean > level1 ? bull_color : distFromMean < level1 and distFromMean > level2 ? neutral_color : distFromMean < level2 ? bear_color : na
+
+plot(distFromMean, style=area, linewidth=3, color=linecolor)
+
+hline(0)
+hline(level1)
+hline(level2)

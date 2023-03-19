@@ -1,0 +1,28 @@
+//@version=3
+study("[nv] relative Strength to S&P")
+
+
+SPX = security("SPX", period, close)
+
+
+currentTicker = security(tickerid, period, close)
+
+
+roc_spx = roc(SPX, 12)
+roc_tick = roc(currentTicker, 12)
+
+
+str = (roc_tick / roc_spx ) * 100
+
+
+
+
+roc_color = str > 0 ? green : red
+
+
+
+
+
+plot(str, style=columns, color=roc_color, title="Slow Trend")
+
+hline(0,title="Zero Line")

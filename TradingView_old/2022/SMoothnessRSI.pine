@@ -1,0 +1,28 @@
+//@version=4
+study(title="Smoohthness Advanced RSI", shorttitle="SRSI", format=format.price, precision=2)
+src = close, len = input(14, minval=1, title="Length")
+
+smoothness=input(5, minval=0, title="Smoothness")
+
+up = rma(max(change(src), 0), len)
+down = rma(-min(change(src), 0), len)
+
+rsi = down == 0 ? 100 : up == 0 ? 0 : 100 - (100 / (1 + up / down))
+
+srsi = sma(rsi, smoothness)
+
+color_rsi = srsi > srsi[1] and srsi[1] > srsi[2] ? color.green : color.red
+
+
+
+//
+
+plot(srsi, color=color.yellow, linewidth=3, transp=70)
+plot(srsi, color=color_rsi)
+
+band1 = hline(70, color=color.red, linewidth=2)
+band0 = hline(30, color=color.green, linewidth=2)
+
+colorFill = srsi > 70 ? color.red : srsi < 70 and srsi > 30 ? color.yellow : color.green
+//fill(band1, band0, color=colorFill, transp=90)
+bgcolor(colorFill)

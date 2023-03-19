@@ -1,0 +1,68 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+//@version=3
+study("Tykhe - Swing Force", shorttitle="Swing")
+
+index = input(title="Index", type=symbol, defval="SP:SPX")
+sector = input(title="Sector (optional)", type=symbol, defval="SP:SPX")
+industry = input(title="Industry (optional)", type=symbol, defval="SP:SPX")
+
+ma_type = input(defval="EMA")
+len_daily = input(title="MA length for Daily", defval=200)
+len_weekly = input(title="MA length for Weekly", defval=50)
+len_monthly = input(title="MA length for Monthly", defval=10)
+len_other = input(title="MA length for all other periods", defval=52)
+val = close
+
+bull_color = #058ac5
+bull_color2 = #1e69de
+indecision_color = #dde4c5
+bear_color = #ff583e
+bear_color2 = red
+
+len = period == "W" ? len_weekly : (period == "D" ? len_daily : (period == "M" ? len_monthly : len_other))
+
+ma_func(x, length) =>
+    ma_type == "WMA" ? wma(x, length) : (ma_type == "SMA" ? sma(x, length) : ema(x, length))
+
+
+calc_mrs_func(x, ind, length) =>
+    ((x / security(ind, period, x)) / ma_func((x / security(ind, period, x)), length) - 1) * 10
+
+length = 20
+
+spx = security("SPX", period, close)
+cor = correlation(close, spx, length)
+
+mrs_index = calc_mrs_func(val, index, 200)
+mrs_index_plot = wma(mrs_index, 3) 
+
+mrs_index_2 = calc_mrs_func(val, index, 50)
+mrs_index_plot_2 = wma(mrs_index_2, 3) 
+
+swing_force = ( mrs_index_plot + mrs_index_plot_2 ) / 2
+
+mrs_color = swing_force[1] < swing_force[0] ? swing_force[0] >= 0 ? bull_color : bear_color : swing_force[0] >= 0 ? bull_color2 : bear_color2
+
+mrs_sector = calc_mrs_func(val, sector, len)
+mrs_industry = calc_mrs_func(val, industry, len)
+c = sign(mrs_index) + sign(mrs_sector) + sign(mrs_industry)
+
+
+
+
+
+
+
+
+
+
+bgcolor(c == 3 ? color(bull_color, 80) : c == 2 ? color(bull_color, 75) : c == 1 ? color(bull_color, 70) : c == -1 ? color(bear_color, 70) : c == -2 ? color(bear_color, 75) : c == -3 ? color(bear_color, 80) : gray)
+
+plot(swing_force, linewidth=3, title="MRS index", color=mrs_color, style=histogram)
+
+hline(price=0, linestyle=dashed, title="Zero baseline")
+
+
+

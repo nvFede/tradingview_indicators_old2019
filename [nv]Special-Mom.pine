@@ -1,0 +1,21 @@
+//@version=3
+study(title="[nv]Special-MO", shorttitle="Special MO")
+length = input(9, minval=1)
+src = close
+momm = change(src)
+f1(m) => m >= 0.0 ? m : 0.0
+f2(m) => m >= 0.0 ? 0.0 : -m
+m1 = f1(momm)
+m2 = f2(momm)
+sm1 = sum(m1, length)
+sm2 = sum(m2, length)
+percent(nom, div) => 100 * nom / div
+chandeMO = percent(sm1-sm2, sm1+sm2)
+
+make_hma(_src, _length)=>  wma((2 * wma(_src, _length / 2)) - wma(_src, _length), round(sqrt(_length)))
+
+ploteo = make_hma(chandeMO, 10)
+
+plot(ploteo, color=white, linewith=2)
+
+hline(0)

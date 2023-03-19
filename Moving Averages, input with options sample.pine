@@ -1,0 +1,36 @@
+//@version=3
+study(title="Moving Averages, input with options sample", shorttitle="MAS", overlay=false)
+length = input(20, minval=1)
+almaOffset = input(0.85, minval=1)
+almaSigma = input(6, minval=0)
+smoothing = input(defval="RMA", options=["RMA", "SMA", "EMA", "WMA", "VWMA", "SMMA", "DEMA", "TEMA", "HullMA", "LSMA"])
+
+ma(smoothing, src, length) => 
+    if smoothing == "RMA"
+        rma(src, length)
+    else
+        if smoothing == "SMA"
+            sma(src, length)
+        else 
+            if smoothing == "EMA"
+                ema(src, length)
+            else 
+                if smoothing == "WMA"
+                    wma(src, length)
+				else
+					if smoothing == "VWMA"
+						vwma(src, length)
+					else
+						if smoothing == "SMMA"
+							na(src[1]) ? sma(src, length) : (src[1] * (length - 1) + src) / length
+						
+						else
+							if smoothing == "HullMA"
+								wma(2 * wma(src, length / 2) - wma(src, length), round(sqrt(length)))
+							else
+								if smoothing == "LSMA"
+									alma(src, length, almaOffset, almaSigma) 
+								else
+									src
+
+plot(ma(smoothing, tr(true), length), color=blue)

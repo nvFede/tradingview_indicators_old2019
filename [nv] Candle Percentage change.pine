@@ -1,0 +1,6 @@
+//@version=3
+study(title = "[nv] Candle Percentage change", overlay=false)
+
+chg = ((close * 100) / open ) - 100
+
+plot(chg, title="Percentage Change", color=chg > 0 ? green : red, style=histogram, transp=0)

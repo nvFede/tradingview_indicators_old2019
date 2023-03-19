@@ -1,0 +1,41 @@
+//@version=3
+study("[nv] Sector Comparison", overlay=true)
+
+//title = input(title="Show Sector")
+
+show_XLY = input(title='XLY: Consumer Discreationary Sector', type=bool, defval=false)
+show_XLI = input(title='XLI: Industrial Sector', type=bool, defval=false)
+show_XLRE = input(title='XLRE: Real State Sector', type=bool, defval=false)
+show_XLE = input(title='XLE: Energy Sector', type=bool, defval=false)
+show_XLF = input(title='XLF: Financial Sector', type=bool, defval=false)
+show_XLK = input(title='XLK: Technology Sector', type=bool, defval=false)
+show_XLB = input(title='XLB: Materials Sector', type=bool, defval=false)
+show_XLU = input(title='XLU: Utilities Sector', type=bool, defval=false)
+show_XLP = input(title='XLP: Consumer Staples Sector', type=bool, defval=false)
+show_XLC = input(title='XLC: Communication Services Sector', type=bool, defval=false)
+show_XLV = input(title='XLV: Health Sector', type=bool, defval=false)
+
+XLY = show_XLY ?  security('XLY', period, close) : na
+XLI = show_XLI ?  security('XLI', period, close) : na
+XLRE = show_XLRE ?   security('XLRE', period, close) : na
+XLE = show_XLE ?  security('XLE', period, close) : na 
+XLF = show_XLF ?  security('XLF', period, close) : na
+XLK = show_XLK ?  security('XLK', period, close) : na
+XLB = show_XLB ?  security('XLB', period, close) : na
+XLU = show_XLU ?  security('XLU', period, close) : na
+XLP = show_XLP ?  security('XLP', period, close) : na
+XLC = show_XLC ?  security('XLC', period, close) : na
+XLV = show_XLV ?  security('XLV', period, close) : na
+
+plot_XLY = plot(XLY, linewidth=2, style=line, title="XLY") 
+plot_XLI = plot(XLI, linewidth=2, style=line, title="XLI") 
+plot_LRE = plot(XLRE, linewidth=2, style=line, title="LRE")
+plot_XLE = plot(XLE, linewidth=2, style=line, title="XLE") 
+plot_XLF = plot(XLF, linewidth=2, style=line, title="XLF") 
+plot_XLK = plot(XLK, linewidth=2, style=line, title="XLK") 
+plot_XLB = plot(XLB, linewidth=2, style=line, title="XLB") 
+plot_XLU = plot(XLU, linewidth=2, style=line, title="XLU") 
+plot_XLP = plot(XLP, linewidth=2, style=line, title="XLP") 
+plot_XLC = plot(XLC, linewidth=2, style=line, title="XLC") 
+plot_XLV = plot(XLV, linewidth=2, style=line, title="XLV") 
+

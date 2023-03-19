@@ -1,0 +1,50 @@
+//@version=1
+study(title="[nv]GoldenCross", overlay=true)
+
+// Double Media Exponential function
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+make_tema(x, y) => ( 3 * ema(x,y)) - 3 * (ema(round(ema(x,y)),y)) + ema(round((ema(round(ema(x,y)),y))),y)
+make_qema(x, y) => 5*ema(x,y)-10*(ema(round(ema(x,y)),y))+10*(ema(round((ema(round(ema(x,y)),y))),y))-5* ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)+ema(round(ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)),y)
+///////////////////////// 
+// Super long EMA 200  //
+/////////////////////////
+
+use_ema200 = input(true, title = "Show Long Trend ? ", type=bool)
+ema200 = use_ema200 ? sma(close,200): na
+ema200_isAbove = close > sma(close[2],200)
+color_ema200_trend = ema200_isAbove ? green : red
+plot(ema200, color=color_ema200_trend, linewidth=2, transp=0)
+
+
+///////////////////////// 
+// Medium trend EMA 50 //
+/////////////////////////
+
+closePrice = plot(close, linewidth=0) 
+ema50 = sma(close,50)
+ema50_isAbove = ema50 > sma(close[2],50)
+color_ema50_trend = ema50_isAbove ? #E8D806 : #FF6B03
+emaPlot = plot(ema50, color=color_ema50_trend)
+mediumTrendColor = close > ema50 ? #E8C216 : #FF8A0C
+// fill(closePrice,emaPlot, color=mediumTrendColor , transp=60	)
+
+////////////////////////// 
+// Golden & Death Cross //
+//////////////////////////
+goldenCrossOver = crossover(ema50,ema200) ? 1 : 0
+goldenCrossUnder= crossunder(ema50,ema200) ? 1 : 0
+//goldenAbove = ema50 > ema200
+plotchar(goldenCrossOver, char='❂', color=yellow, location=location.bottom, size=size.small, transp=1)
+plotchar(goldenCrossUnder, char='❂', color=red, location=location.bottom, size=size.small, transp=1)
+//plotGolden = goldenCross ? plotchar(goldenAbove,char='*', location=location.belowbar, size=size.normal) : na
+//------------------------------
+
+//////////////////////////////// 
+// Ed Seykota moving Averages //
+////////////////////////////////
+ema80 = ema(close, 80)
+ema140 = ema(close, 140)
+edCrossOver = crossover(ema80,ema140) ? 1 : 0
+edCrossUnder= crossunder(ema80,ema140) ? 1 : 0
+plotchar(edCrossOver, char='Up', color=yellow, location=location.bottom, size=size.tiny, transp=1)
+plotchar(edCrossUnder, char='Down', color=red, location=location.bottom, size=size.tiny, transp=1)

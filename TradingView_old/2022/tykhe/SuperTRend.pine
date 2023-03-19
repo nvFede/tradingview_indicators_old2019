@@ -1,0 +1,39 @@
+//@version=4
+study("Tykhe - SuperTrend With Factor Smoothness", overlay=true)
+
+Supertrend(Factor, Pd) =>
+    Up = hl2 - Factor * atr(Pd)
+    Dn = hl2 + Factor * atr(Pd)
+
+    TrendUp = 0.0
+    TrendUp := close[1] > TrendUp[1] ? max(Up, TrendUp[1]) : Up
+    TrendDown = 0.0
+    TrendDown := close[1] < TrendDown[1] ? min(Dn, TrendDown[1]) : Dn
+    Trend = 0.0
+    Trend := close > TrendDown[1] ? 1 : close < TrendUp[1] ? -1 : nz(Trend[1], 1)
+    Tsl = Trend == 1 ? TrendUp : TrendDown
+
+    S_Buy = Trend == 1 ? 1 : 0
+    S_Sell = Trend != 1 ? 1 : 0
+
+    [Trend, Tsl]
+
+
+Factor = input(3, title="[ST] Factor", minval=1, maxval=100, type=input.float)
+Pd = input(7, title="[ST] PD", minval=1, maxval=100)
+
+[Trend, Tsl] = Supertrend(Factor, Pd)
+
+//plot(Trend)
+
+smoothness = input(5, title="Smoothness", minval=1, maxval=100)
+
+
+t = wma(Tsl, smoothness)
+
+
+
+
+t_color = t > close ? color.red : color.green
+
+plot(t, linewidth=3, color=t_color)

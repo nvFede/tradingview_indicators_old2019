@@ -1,0 +1,24 @@
+//@version=3
+study(title="Relative Strength Index", shorttitle="RSI")
+
+rsi_1 = rsi(close,8)
+rsi_2 = rsi(close,13)
+rsi_3 = rsi(close,34)
+
+plot(rsi_1, color=purple, linewidth=3, transp=1)
+plot(rsi_2, color=purple, linewidth=3, transp=1)
+plot(rsi_3, color=purple, linewidth=3, transp=1)
+band1 = hline(70)
+band0 = hline(30)
+fill(band1, band0, color=purple, transp=90)
+
+rsi1_under_rsi2 = crossunder(rsi_1, rsi_2) ? rsi_1 : na
+rsi2_under_rsi3 = crossunder(rsi_2, rsi_3) ? rsi_2 : na
+rsi1_over_rsi2 = crossover(rsi_1, rsi_2) ? rsi_1 : na
+rsi2_over_rsi3 = crossover(rsi_2, rsi_3) ? rsi_2 : na
+
+plotshape(rsi1_under_rsi2, style = shape.arrowdown,location=location.top)
+plotshape(rsi2_under_rsi3, style = shape.triangledown, location=location.top)
+
+plotshape(rsi1_over_rsi2, style = shape.arrowup,location=location.bottom)
+plotshape(rsi2_over_rsi3, style = shape.triangleup,location=location.bottom)

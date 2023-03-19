@@ -1,0 +1,35 @@
+//@version=3
+study("Mi script")
+
+price = input(close)
+len = input(defval=20,minval=1) // Should be even number
+TC = input(defval=1,minval=1)
+SC = input(defval=200,minval=1)
+
+frama_in(x,y,z) =>
+	li1 = x/2
+	e = 2.7182818284590452353602874713527
+	w = log(2/(z+1)) / log(e) // Natural logarithm (ln(2/(z+1))) workaround
+	H1 = highest(high,li1)
+	L1 = lowest(low,li1)
+	N1 = (H1-L1)/li1
+	H2 = highest(high,li1)[li1]
+	L2 = lowest(low,li1)[li1]
+	N2 = (H2-L2)/li1
+	H3 = highest(high,x)
+	L3 = lowest(low,x)
+	N3 = (H3-L3)/x
+	dimen1 = (log(N1+N2)-log(N3))/log(2)
+	dimen = iff(N1>0 and N2>0 and N3>0,dimen1,nz(dimen1[1]))
+	alpha1 = exp(w*(dimen-1))
+	oldalpha = alpha1>1?1:(alpha1<0.01?0.01:alpha1)
+	oldN = (2-oldalpha)/oldalpha
+	N = (((z-y)*(oldN-1))/(z-1))+y
+	alpha_ = 2/(N+1)
+	alpha = alpha_<2/(z+1)?2/(z+1):(alpha_>1?1:alpha_)
+	result = (1-alpha)*nz(result[1]) + alpha*price
+	result
+
+
+frama = frama_in(len,TC,SC)
+plot(frama,title="FRAMA",color=red,transp=0)

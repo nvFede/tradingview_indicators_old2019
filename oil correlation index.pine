@@ -1,0 +1,11 @@
+//@version=3
+study("[nv]Oilcorrelation", shorttitle="[nv]OilCor", overlay=false)
+wti = input(title="Symbol", type=symbol, defval="GC1!")
+oil1 = security(wti, period, close)
+
+Brent = input(title="Symbol", type=symbol, defval="Sl1")
+oil2= security(Brent, period, close)
+
+currentPlot = oil1/oil2
+plot(currentPlot, linewidth=2, color=red)
+

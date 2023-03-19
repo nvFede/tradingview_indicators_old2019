@@ -1,0 +1,12 @@
+//@version=3
+study("[nv]Nasdaq Index Ratio", overlay=false)
+
+QQQ = security('QQQ', "D", close)
+QQEW = security('QQEW', "D", close)
+
+result = QQQ/ QQEW
+
+emas = ema(result,21)
+
+plot(result, linewidth=2, color=red)
+plot(emas, linewidth=1, color=blue)

@@ -1,0 +1,10 @@
+//@version=3
+study("EURUSD Sentiment Indicator", overlay=false)
+
+german = security("TVC:DE10Y", period, close)
+us = security("TVC:US10Y", period, close)
+eurusd = security('EURUSD', period, close)
+
+ratio = ( german/us ) / eurusd
+
+plot(ratio, linewidth=2, color=red)

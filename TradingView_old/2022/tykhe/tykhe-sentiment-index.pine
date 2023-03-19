@@ -1,0 +1,31 @@
+spx//version=3
+study("Tykhe - Sentiment index", overlay=false)
+
+s50 = input(title="Symbol", type=symbol, defval="S5FI")
+s200 = input(title="Symbol", type=symbol, defval="S5TH")
+
+OUT70 = input(title="Upper Line", type=float, defval=70)
+OUT50 = input(title="Middle Line", type=float, defval=50)
+OUT30 = input(title="Lower Line", type=float, defval=30)
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+
+LIN1 = security(s50, period, close)
+LIN2 = security(s200, period, close)
+
+h0 = hline(OUT70)
+h1 = hline(OUT50)
+h2 = hline(OUT30)
+
+//fill(h0,h1, color= white, transp=90)
+
+hline(OUT70, linestyle = dotted, color = bull_color)
+hline(OUT50, linestyle = dotted, color = indecision_color)
+hline(OUT30, linestyle = dotted, color = bear_color)
+
+
+plot(sma(LIN1, 1), color = bull_color, style = line, linewidth = 3)
+plot(sma(LIN2, 1), color = bear_color, style = line, linewidth = 3)

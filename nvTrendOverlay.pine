@@ -1,0 +1,183 @@
+//@version=3
+study("nvTrend", overlay=true)
+
+//Colores
+//Amarillo - #E8C216
+//Amerillo Oscuro - 
+
+// Cuadruple Media Exponential function
+make_qema(x, y) => 5*ema(x,y)-10*(ema(round(ema(x,y)),y))+10*(ema(round((ema(round(ema(x,y)),y))),y))-5* ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)+ema(round(ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)),y)
+// Triple Media Exponential function
+make_tema(x, y) => ( 3 * ema(x,y)) - 3 * (ema(round(ema(x,y)),y)) + ema(round((ema(round(ema(x,y)),y))),y)
+// Double Media Exponential function
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+// Hull moving Average function
+make_hma(_src, _length) =>  wma((2 * wma(_src, _length / 2)) - wma(_src, _length), round(sqrt(_length)))
+
+////////////////////// 
+// Bollinger Bands  //
+//////////////////////
+// bb_length = input(20, minval=1)
+// bb_src = input(close, title="Source")
+// mult = input(2.0, minval=0.001, maxval=50)
+// basis = sma(bb_src, bb_length)
+// dev = mult * stdev(bb_src, bb_length)
+// bbUpperBand = basis + dev
+// bbLowerBand = basis - dev
+// plot(basis, color=red)
+// plot_bbUpperBand = plot(bbUpperBand, color=blue)
+// plot_bbLowerBand = plot(bbLowerBand, color=blue)
+// //fill(plot_bbUpperBand, plot_bbLowerBand)
+
+////////////////////// 
+// Keltner Channels //
+//////////////////////
+// useTrueRange = input(true)
+// kc_length = input(20, minval=1)
+// mult_kc = input(1.5)
+// src = input(close, title="Source")
+// ema_kc = ema(src, kc_length)
+// range = useTrueRange ? tr : high - low
+// rangema = ema(range, kc_length)
+// upper_kc_band = ema_kc + rangema * mult_kc
+// lower_kc_band = ema_kc - rangema * mult_kc
+// c_kc = blue
+// u_kc = plot(upper_kc_band, color=c_kc, title="Upper KC Band")
+// plot(ema_kc, color=c_kc, title="Basis")
+// l = plot(lower_kc_band, color=c_kc, title="Lower KC Band")
+// //fill(u_kc, l, color=c_kc)
+
+/////////////////////////////  
+//  bar color & BB alert   //
+/////////////////////////////
+// isUpperBandInside = bbUpperBand < upper_kc_band ? 1 : 0
+// isLowerBandInside = bbLowerBand > lower_kc_band ? 1 : 0
+// squeezeModeOn = isUpperBandInside and isLowerBandInside ? 1 : 0
+// squeezeCircleColor = squeezeModeOn ? red : blue
+// plotchar(squeezeModeOn, char="●", color=squeezeCircleColor, location=location.bottom, size=size.tiny)
+
+
+/////////////////////////////  
+// Alerta RSI 14 periodos  //
+/////////////////////////////
+use_rsi = input(true, title = "Use RSI", type=bool)
+rsi_value = use_rsi ? rsi(close,14) : na
+high_cross_75 = rsi_value > 75 and rsi_value < 81  
+high_cross_80 = (rsi_value > 80 and rsi_value < 85)
+high_cross_85 = rsi_value > 85
+plotchar(high_cross_75, char='◠',color=white, location=location.abovebar, size=size.tiny)
+plotchar(high_cross_80, char='◠',color=orange, location=location.abovebar, size=size.tiny)
+plotchar(high_cross_85, char='◠',color=red, location=location.abovebar, size=size.tiny)
+low_cross_25 = rsi_value < 26 and rsi_value > 19
+low_cross_20 = rsi_value < 20 and rsi_value > 15
+low_cross_15 = rsi_value < 15
+plotchar(low_cross_25, char='◡', color=white,location=location.belowbar, size=size.tiny)
+plotchar(low_cross_20, char='◡', color=orange,location=location.belowbar, size=size.tiny)
+plotchar(low_cross_15, char='◡', color=red, location=location.belowbar, size=size.tiny)
+
+/////////////////////////// 
+// Background 132 & 365  //
+///////////////////////////
+
+// use_dema365 = input(true, title = "Show Super Long Trend ? ", type=bool)
+// dema365 = use_dema365 ? make_dema(close,365): na
+// tema132 = use_dema365 ? make_tema(close,132): na
+// tema132_isAbove = tema132 > dema365 
+// color_tema132_bg = tema132_isAbove ? na : white
+// bgcolor( color=color_tema132_bg, transp=85)
+
+
+//medium Trend
+
+///////////////////////// 
+// Super long EMA 200  //
+/////////////////////////
+
+// use_ema200 = input(true, title = "Show Long Trend ? ", type=bool)
+// ema200 = use_ema200 ? ema(close,200): na
+// ema200_isAbove = ema200 > ema(close[2],200)
+// color_ema200_trend = ema200_isAbove ? green : red
+// dailyChartEma200 = security(tickerid, 'D', ema200 )
+// plot(dailyChartEma200, color=color_ema200_trend, linewidth=2, transp=0)
+
+
+///////////////////////// 
+// Medium trend EMA 50 //
+/////////////////////////
+use_ema50 = input(true, title="Show Medium Trend ? ", type=bool)
+ema50 = use_ema50 ? ema(close,50) : na
+ema50_isAbove = ema50 > ema(close[2],50)
+color_ema50_trend = ema50_isAbove ? #E8D806 : #FF6B03
+emaPlot = plot(ema50, color=color_ema50_trend, linewidth=2, transp=0)
+mediumTrendColor = close > ema50 ? #E8C216 : #FF8A0C
+// fill(closePrice,emaPlot, color=mediumTrendColor , transp=60	)
+
+////////////////////////// 
+// Golden & Death Cross //
+//////////////////////////
+// showGoldenCross = input(true,"Show Golden & Death cross?", type=bool)
+// goldenCrossOver = crossover(ema50,ema200) ? 1 : 0 
+// goldenCrossUnder= crossunder(ema50,ema200) ? 1 : 0
+// plotchar(goldenCrossOver, char='❂', color=yellow, location=location.bottom, size=size.small, transp=1)
+// plotchar(goldenCrossUnder, char='❂', color=red, location=location.bottom, size=size.small, transp=1)
+
+
+//title_medium = input(title="Medium Trend")
+
+// md_super_fast = input(title="Super-fast Trend MA: ",defval=35)
+// md_fast = input(title="Fast Trend MA: ", defval=55)
+// md_slow = input(title="Slow Trend MA: ", defval=89)
+// md_line_fast = make_hma(close,md_fast) 
+// md_line_slow = make_hma(close,md_slow) 
+// zone_f1 = plot(md_line_fast, color= #FF8A0C, linewidth=0, offset=0)
+// zone_f2 = plot(md_line_slow, color=#E8C216, linewidth=0, offset=0)
+// //plot(fast_trend_stop, color=white, linewidth=2, offset=0)
+// sfastTrendColor = md_line_fast  > md_line_slow  ? #E8D806 : #FF6B03
+// fill(zone_f1,zone_f2, color=sfastTrendColor , transp=25)
+
+
+
+// fast Trend
+
+ma_super_fast = input(title="Super-fast Trend MA: ",defval=1)
+ma_fast = input(title="Fast Trend MA: ", defval=12)
+ma_slow = input(title="Slow Trend MA: ", defval=24)
+fast_trend_stop = make_dema(close,ma_super_fast) 
+fib1 = make_dema(close,ma_fast) 
+fib2 = make_dema(close,ma_slow) 
+
+zone1 = plot(fib1, color= #00EAFF, linewidth=0, offset=0)
+zone2 = plot(fib2, color=#FF0DFF, linewidth=0, offset=0)
+plot(fast_trend_stop, color=#E8C216, linewidth=5, offset=0)
+fastTrendColor = fib1 > fib2 ? green : red
+fill(zone1,zone2, color=fastTrendColor , transp=25)
+
+
+// Superfast HULL
+hull_1 = make_hma(close,12) 
+hull_2 = make_hma(close,12)
+zone_fast_1 = plot(hull_1, color=#FF0000, linewidth=3, offset=0)
+zone_fast_2 = plot(hull_2, color=#FF7F00, linewidth=3, offset=-2)
+superFastTrendColor = hull_1 > hull_2 ? #00EAFF : #FF0DFF
+// fill(zone_fast_1,zone_fast_2, color=superFastTrendColor , transp=1)
+
+
+/////////////////////////// 
+// STAN WEINSTEIN WMA 30 //
+///////////////////////////
+// use_wma = input(true, title = "Use Stan We", type=bool)
+// _wma = input(title="WMA", type=integer, defval=30)
+// src = input(title="Source", type=source, defval=close)
+// res = input(title="Time Frame", type=resolution, defval="W")
+// htf_ma2 = wma(src, _wma)
+// out = security(tickerid, res, htf_ma2)
+// plot(out, color=red, linewidth=2, style=circles)
+
+
+/////////////////////////// 
+// STAN WEINSTEIN WMA 30 //
+///////////////////////////
+// use_wma = input(true, title = "Use Stan Weinstein?", type=bool)
+// htf_ma2 = use_wma ? wma(close, 30) : na
+// out = security(tickerid, "W", htf_ma2)
+// plot(out, color=red, linewidth=2, style=circles)

@@ -1,0 +1,31 @@
+//@version=3
+study("qd", overlay=false)
+
+val = input(title="qema", defval=15)
+//TEMA=(3xEMA)-(3xEMAofEMA)+(EMAof EMAofEMA)
+
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+
+make_tema(x, y) => ( 3 * ema(x,y)) - 3 * (ema(round(ema(x,y)),y)) + ema(round((ema(round(ema(x,y)),y))),y)
+make_qema(x, y) => 5*ema(x,y)-10*(ema(round(ema(x,y)),y))+10*(ema(round((ema(round(ema(x,y)),y))),y))-5* ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)+ema(round(ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)),y)
+
+DEMA = make_dema(close,val)
+TEMA = make_tema(close,val)
+
+
+valor_1 = input(title="Rapida: ", defval=12) 
+valor_2 = input(title="Lenta: ", defval=26) 
+
+
+
+ema12 = make_qema(close, valor_1) 
+ema26 = make_qema(close, valor_2) 
+ema_rapida = (( close * 100) / ema12 - 100 ) * ema12
+ema_lenta = (( close * 100) / ema26 - 100 )  * ema26
+
+
+macd =ema_lenta- ema_rapida
+signal_val = input(title="señal:", defval=9) 
+signal=make_tema(macd, signal_val)
+plot(macd, color=blue, linewidth=2)
+plot(signal, color=red,linewidth=2)

@@ -1,0 +1,28 @@
+// FEDE Vix/Vxv
+study("VXV/VIX Ratio", overlay=false)
+
+sym0 = input(title="Symbol", type=symbol, defval="VIX")
+sym1 = input(title="Symbol", type=symbol, defval="VXV")
+
+OUT0 = input(title="Upper Line", type=float, defval=1.3)
+OUT1 = input(title="Lower Line", type=float, defval=1)
+RAT0 = security(sym0, period, close)
+RAT1 = security(sym1, period, close)
+
+
+MOV0 = input(title="EMA Period", type=integer, defval=21)
+
+k = ema(RAT0 / RAT1, MOV0)
+
+h0 = hline(OUT0)
+h1 = hline(OUT1)
+
+colorLine = (RAT0/RAT1) > 1 ? red : blue
+
+plot(k, color=white, style = line, linewidth = 1)
+
+fill(h0,h1, color= white, transp=95)
+
+hline(OUT0, linestyle = dotted, color = orange)
+hline(OUT1, linestyle = dotted, color = green)
+plot((RAT0 / RAT1), color = colorLine, style = line, linewidth = 2)

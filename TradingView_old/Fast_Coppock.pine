@@ -1,0 +1,18 @@
+//@version=4
+study(title = "QS Fast Coppock", overlay=false)
+
+wmaLength = input(title="WMA Length", type=input.integer, defval=10)
+longRoCLength = input(title="Long RoC Length", type=input.integer, defval=14)
+shortRoCLength = input(title="Short RoC Length", type=input.integer, defval=11)
+
+//hma(_src, _length)=>
+  /spx
+  /  wma((2 * wma(_src, _length / 2)) - wma(_src, _length), round(sqrt(_length)))
+
+source = close
+
+curve = hma(roc(source, longRoCLength) + roc(source, shortRoCLength), wmaLength)
+
+hline(0)
+
+plot(curve)

@@ -1,0 +1,25 @@
+//@version=3
+study('[nv] Indice de Fuerza Alcista', overlay=false)
+roc_val_1 = input(title="Rate 1: ", type=integer, defval=3)
+roc_val_2 = input(title="Rate 2: ", type=integer, defval=4)
+
+media = input(title="Average: ", type=integer, defval=14)
+
+
+roc_1 = roc(close, roc_val_1)
+roc_2 = roc(close, roc_val_2)
+
+atr_1 = atr(media)
+ma = sma(close,media)
+
+ratio = atr_1 / ma
+
+fuerza = (roc_1 * 0.4 + roc_2 * 0.2) / (ratio * 0.4)
+
+sma_fuerza = sma(fuerza,26)
+
+fuerza_color = fuerza > 0 ? green : red
+
+plot(fuerza, style=columns, color=fuerza_color)
+
+plot(sma_fuerza, style=line, color=yellow, linewidth=2)

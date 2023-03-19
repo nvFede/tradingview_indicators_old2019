@@ -1,0 +1,32 @@
+//@version=3
+study(shorttitle="QS Pressure", title="QS Pressure", overlay=false)
+length = input(20, minval=1)
+src = input(close, title="Source")
+mult = input(2.0, minval=0.001, maxval=50)
+basis = sma(src, length)
+dev = mult * stdev(src, length)
+upper = basis + dev
+lower = basis - dev
+
+
+/////////////////////////////////////////
+
+useTrueRange = input(true)
+length_kc = input(20, minval=1)
+mult_kc = input(1.0)
+src_kc = close
+
+ma = ema(src_kc, length_kc)
+range = useTrueRange ? tr : high - low
+rangema = ema(range, length_kc)
+upper_kc = ma + rangema * mult_kc
+lower_kc = ma - rangema * mult_kc
+
+upper_sq_color = upper < upper_kc ? red : green
+lower_sq_color = lower > lower_kc ? red : green
+
+plot(3, color=white )
+plot(1, title="upper Pressure", style=circles, linewidth=3, color=upper_sq_color)
+plot(0, color=white )
+plot(-1, title="Lower Pressure", style=circles, linewidth=3, color=lower_sq_color)
+plot(-3, color=white )

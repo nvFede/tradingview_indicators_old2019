@@ -1,0 +1,34 @@
+//@version=4
+study(title="Parabolic SAR", shorttitle="SAR", overlay=false, resolution="")
+
+//strategy(title="Parabolic SAR Strategy (on close) [QuantNomad]", shorttitle="SAR Strategy [QN]", overlay=true)
+
+start      = input(0.02)
+increment  = input(0.02)
+maximum    = input(0.2)
+entry_bars = input(1, title = "Entry on Nth trend bar") 
+
+psar        = 0.0 // PSAR
+af          = 0.0 // Acceleration Factor
+trend_dir   = 0   // Current direction of PSAR
+ep          = 0.0 // Extreme point
+trend_bars  = 0
+
+rsi_l = input(14, title='RSI Length')
+_rsi = rsi(close, rsi_l)
+atr_l = input(22, title='ATR Length')
+_atr = atr(atr_l)
+
+mul = input(1, title="multiplier")
+
+uband = highest(_rsi, atr_l) - _atr 
+lband = lowest(_rsi, atr_l) + _atr 
+
+plot(_rsi)
+plot(uband)
+plot(lband)
+
+
+// Strategy 
+//strategy.entry("Long",  true,  when = trend_bars ==  entry_bars)
+//strategy.entry("Short", false, when = trend_bars == -entry_bars)

@@ -1,0 +1,69 @@
+//@version=4
+study("Tykhe - Rolling Sharpe Ratio", shorttitle="Tykhe - SR")
+
+//--------------------------- Opciones ----------------------------------- 
+src = input(close, title="Fuente: ")
+
+display_ss = input(type=input.bool, defval=true, title="¿Ver Sharpe corto?")
+display_ls = input(type=input.bool, defval=true, title="¿Ver Sharpe Largo?")
+
+len = input(200, title="Long Sharpe: ", minval=0)
+short_len = input(52, title="Short Sharpe: ", minval=0)
+
+use_rf = input(type=input.bool, defval=false, title="¿Usar tasa libre de riesgo?")
+
+rf_sec = security(input("DTB3", title="Tasa libre de riesgo: "), timeframe.period, close)
+
+smoothness = input(defval=5, minval=0, title="Suavizado: ")
+
+mostrar_sma = input(type=input.bool, defval=true, title="¿Mostrar media móvil?")
+
+sma_period = input(200, title="Media Móvil: ", minval=0)
+
+//--------------------------- Hull Moving average -----------------------------------
+hull(x, longitud) =>
+    hullma = wma(2*wma(x, longitud/2)-wma(x, longitud), round(sqrt(longitud)))
+
+//--------------------------- Colores -----------------------------------
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+
+
+//--------------------------- Long Sharpe -----------------------------------
+
+
+rf = use_rf ? rf_sec / 100 : 0
+
+long_pc = (src - src[len]) / src
+long_std = stdev(src, len)
+long_stdaspercent = long_std / src
+long_SR = hull((long_pc - rf) / long_stdaspercent, smoothness)
+
+sma_1 = ema(long_SR, sma_period)
+media = mostrar_sma ? sma_1 : na
+
+
+//--------------------------- Long Sharpe -----------------------------------
+
+
+
+
+short_pc = (src - src[short_len]) / src
+short_std = stdev(src, short_len)
+short_stdaspercent = short_std / src
+short_SR = hull((short_pc - rf) / short_stdaspercent, smoothness)
+
+
+
+plot(display_ls ? long_SR : na, style=plot.style_histogram, color=long_SR < 0 ? bear_color : bull_color, linewidth=3, transp=50 )
+plot(display_ls ? long_SR : na, style=plot.style_line, color=indecision_color, linewidth=2, transp=50)
+
+
+plot(display_ss ? short_SR : na, style=plot.style_histogram, color=short_SR < 0 ? bear_color : bull_color, linewidth=3, transp=50 )
+plot(display_ss ? short_SR : na, style=plot.style_line, color=indecision_color, linewidth=2, transp=50)
+
+plot(media, style=plot.style_circles, color=indecision_color, linewidth=1)
+
+hline(0, linestyle=hline.style_dashed, color=indecision_color)

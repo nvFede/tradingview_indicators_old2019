@@ -1,0 +1,19 @@
+//@version=3
+study("Analisis", overlay=true)
+
+tck = security(ticker, period, close)
+
+ma20 = sma(tck, 20)
+ma60 = sma(tck, 60)
+reg = linreg(tck, 21, 0)
+reg2 = linreg(tck, 52, 0)
+
+smoother = ema(reg2, 5)
+
+
+//plot(vix, linewidth=2, color=blue)
+//plot(ma20, linewidth=2, color=white)
+//plot(ma60, linewidth=2, color=orange)
+plot(reg, linewidth=3, color=red)
+//plot(reg2, linewidth=3, color=white)
+plot(smoother, linewidth=3, color=white)

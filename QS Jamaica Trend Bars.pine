@@ -1,0 +1,21 @@
+//@version=3
+study("QS Jamaica Bars", overlay=true)
+
+useTrueRange = input(true)
+length = input(21, minval=1)
+mult = input(defval=0.618, title="Level 1")
+mult2 = input(defval=2.236, title="Level 2")
+src = input(ohlc4, title="Source")
+
+ma = ema(close, length)
+range = useTrueRange ? tr : high - low
+rangema = ema(range, length)
+upper = ma + rangema * mult
+second_upper = ma + rangema * mult2
+lower = ma - rangema * mult
+second_lower = ma - rangema * mult2
+
+barc = src > lower and src < upper ? yellow : src < lower and src > second_lower  ? red : src < second_lower ? #AA0000 : src > upper and src < second_upper ? green : src > second_upper ? lime : na
+
+
+plotbar(open, high, low, close, color=barc)

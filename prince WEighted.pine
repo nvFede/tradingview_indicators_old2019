@@ -1,0 +1,70 @@
+//@version=3
+study(title="[nv]PriceWeighted", shorttitle="[nv]PW", overlay=false)
+
+
+length = input(20, minval=1)
+//src = input(close, title="Source")
+mult = input(2.0, minval=0.001, maxval=50)
+
+src = input(hlc3)
+
+show_week = input(true, title="Show Weekly VWAP ? ", type=bool)
+show_month = input(true, title="Show Monthly VWAP ? ", type=bool)
+show_quarter = input(true, title="Show Quarter VWAP ? ", type=bool)
+show_year = input(true, title="Show Yearly VWAP ? ", type=bool)
+show_average = input(true, title="Show Average VWAP ? ", type=bool)
+
+// VWAP por semana
+tw = time("2W")
+startWeek = na(tw[1]) or tw > tw[1]
+sumSrcWeek = src * volume
+sumVolWeek = volume
+sumSrcWeek := startWeek ? sumSrcWeek : sumSrcWeek + sumSrcWeek[1]
+sumVolWeek := startWeek ? sumVolWeek : sumVolWeek + sumVolWeek[1]
+resultWeek = sumSrcWeek / sumVolWeek
+
+// VWAP por Mes
+tmes = time("M")
+startMonth = na(tmes[1]) or tmes > tmes[1]
+sumSrcMonth = src * volume
+sumVolMonth = volume
+sumSrcMonth := startMonth ? sumSrcMonth : sumSrcMonth + sumSrcMonth[1]
+sumVolMonth := startMonth ? sumVolMonth : sumVolMonth + sumVolMonth[1]
+resultMonth = sumSrcMonth / sumVolMonth
+
+
+// VWAP por Cuarto
+
+tQtr = time("3M")
+startQtr = na(tQtr[1]) or tQtr > tQtr[1]
+sumSrcQtr = src * volume
+sumVolQtr = volume
+sumSrcQtr := startQtr ? sumSrcQtr : sumSrcQtr + sumSrcQtr[1]
+sumVolQtr := startQtr ? sumVolQtr : sumVolQtr + sumVolQtr[1]
+resultQtr = sumSrcQtr / sumVolQtr
+
+// VWAP por Mes
+tyear = time("12M")
+startYear = na(tyear[1]) or tyear > tyear[1]
+sumSrcYear = src * volume
+sumVolYear = volume
+sumSrcYear := startYear ? sumSrcYear : sumSrcYear + sumSrcYear[1]
+sumVolYear := startYear ? sumVolYear : sumVolYear + sumVolYear[1]
+resultYear = sumSrcYear / sumVolYear
+
+AverageVWAP = ( resultYear + resultWeek + resultMonth + resultQtr ) / 4
+
+colorAverageVWAP = AverageVWAP > AverageVWAP[1] ? green : red
+
+//plot_weekly_vwap =  plot(resultWeek, title="VWAP Week",linewidth = 2, color=white)
+// plot(resultMonth, title="VWAP Month",linewidth = 2, color=yellow)
+// plot(resultQtr, title="VWAP Quarter",linewidth = 2, color=orange)
+// plot(resultYear, title="VWAP Year",linewidth = 2, color=red)
+dev = mult * stdev(AverageVWAP, length)
+//plot(dev, title="VWAP Average",linewidth = 5, color=colorAverageVWAP)
+
+Monthly_distance = close - resultMonth
+Yearly_distance = close - resultYear
+
+plot(Monthly_distance, title="VWAP Month",linewidth = 2, color=yellow)
+plot(Yearly_distance, title="VWAP Quarter",linewidth = 2, color=orange)

@@ -1,0 +1,46 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("Kama-WAP", shorttitle="KWAP")
+length = input(20)
+smoothness = input(1)
+
+make_kame(x, y) =>
+    xvnoise = abs(x - x[1])
+    nfastend = 0.666
+    nslowend = 0.0645
+    nsignal = abs(x - x[y])
+    nnoise = sum(xvnoise, y)
+    nefratio = iff(nnoise != 0, nsignal / nnoise, 0)
+    nsmooth = pow(nefratio * (nfastend - nslowend) + nslowend, 2) 
+    KAMA = nz(KAMA[1]) + nsmooth * (x - nz(KAMA[1]))
+
+calc_zvwap(pds) =>
+    mean = sum(volume * close, pds) / sum(volume, pds)
+    vwapsd = sqrt(make_kame(pow(close - mean, 2), pds))
+    (close - mean) / vwapsd
+
+plot(0)
+upperTop = input(2.5)
+upperBottom = input(2.0)
+lowerTop = input(-2.5)
+lowerBottom = input(-2.0)
+
+plot(1, style=3, color=gray)
+plot(-1, style=3, color=gray)
+ul1 = plot(upperTop, "OB High")
+ul2 = plot(upperBottom, "OB Low")
+fill(ul1, ul2, color=red)
+ll1 = plot(lowerTop, "OS High")
+ll2 = plot(lowerBottom, "OS Low")
+fill(ll1, ll2, color=green)
+
+
+//ma = make_kame(src, length)
+
+wvap_smoothness = ema(calc_zvwap(length), smoothness)
+
+plot(wvap_smoothness, title="ZVWAP", color=black, linewidth=2)
+
+

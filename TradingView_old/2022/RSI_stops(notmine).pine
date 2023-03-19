@@ -1,0 +1,20 @@
+
+study("Rsi Stops - JD",overlay=true)
+mc_G=input(false,title="use Mc Ginley Dynamic")
+
+McGinley(_src,len) =>
+    MD=0.0
+    MD:=na(_src[1])?_src:(MD[1]+(_src-MD[1])/(0.6*len*pow((_src/MD[1]),4)))
+
+rsi_ma=mc_G?McGinley(ohlc4,14):ema(ohlc4,27)
+ATR=atr(27)
+top_line=rsi_ma+ATR
+bottom_line=rsi_ma-ATR
+direction=1
+direction:=crossover(close,top_line)?1:crossunder(close,bottom_line)?-1:direction[1]
+stop_line=rsi_ma-direction*ATR
+plot(rsi_ma,style=plot.style_circles,color=color.gray)
+plot(stop_line,color=direction==1?color.green:color.red)
+plotshape(change(direction)!=0?stop_line:na,style=shape.circle,color=direction==1?color.lime:color.fuchsia,location=location.absolute,size=size.tiny)
+alertcondition(change(direction)!=0 and close>stop_line, title = "Short Stop / Long Entry", message = "Short stop hit! / Long entry!")
+alertcondition(change(direction)!=0 and close<stop_line, title = "Long Stop / Short Entry", message = "Long stop hit! / Short entry!")

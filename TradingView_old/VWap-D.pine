@@ -1,0 +1,21 @@
+//@version=4
+study(title="VWAP Distance", shorttitle="VWAP D.", overlay=false)
+
+src = input(hlc3)
+t = time("D")
+start = na(t[1]) or t > t[1]
+
+sumSrc = src * volume
+sumVol = volume
+sumSrc := start ? sumSrc : sumSrc + sumSrc[1]
+sumVol := start ? sumVol : sumVol + sumVol[1]
+
+vwap_line = sumSrc / sumVol
+
+
+// You can use built-in vwap() function instead.
+
+plot((close / vwap_line) - 1, title="VWAP", color=color.green)
+hline(0)
+
+

@@ -1,0 +1,16 @@
+//@version=2
+study("nvRSIAlert", overlay=true)
+use_rsi = input(true, title = "Use RSI", type=bool)
+rsi_value = use_rsi ? rsi(close,14) : na
+high_cross_75 = rsi_value > 75 and rsi_value < 81  
+high_cross_80 = (rsi_value > 80 and rsi_value < 85)
+high_cross_85 = rsi_value > 85
+plotchar(high_cross_75, char='◠',color=white, location=location.abovebar, size=size.tiny)
+plotchar(high_cross_80, char='◠',color=orange, location=location.abovebar, size=size.tiny)
+plotchar(high_cross_85, char='◠',color=red, location=location.abovebar, size=size.tiny)
+low_cross_25 = rsi_value < 26 and rsi_value > 19
+low_cross_20 = rsi_value < 20 and rsi_value > 15
+low_cross_15 = rsi_value < 15
+plotchar(low_cross_25, char='◡', color=white,location=location.belowbar, size=size.tiny)
+plotchar(low_cross_20, char='◡', color=orange,location=location.belowbar, size=size.tiny)
+plotchar(low_cross_15, char='◡', color=red, location=location.belowbar, size=size.tiny)

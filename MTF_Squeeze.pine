@@ -1,0 +1,64 @@
+study("[nv] MTF Squeeze", overlay=false)
+
+length = input(title="Length", type=integer, defval=20, minval=0)
+lengthBB = input(title="BB Length", type=float, defval=2.236, minval=0)
+lengthKC = input(title="KC Length", type=float, defval=1.618, minval=0)
+
+on_diff5  = input(title="show 5 min timeframe", type=bool, defval=1)
+on_diff15  = input(title="show 15 min timeframe", type=bool, defval=1)
+on_diff39  = input(title="show 39 min timeframe", type=bool, defval=1)
+on_diff78  = input(title="show 78 min timeframe", type=bool, defval=1)
+on_diff130  = input(title="show 130 min timeframe", type=bool, defval=1)
+on_diffd  = input(title="show daily timeframe", type=bool, defval=1)
+on_diffw  = input(title="show weekly timeframe", type=bool, defval=1)
+
+
+close5 = security(tickerid, '5', close)
+close15 = security(tickerid, '15', close)
+close39 = security(tickerid, '39', close)
+close78 = security(tickerid, '78', close)
+close130 = security(tickerid, '130', close)
+closed = security(tickerid, 'D', close)
+closew = security(tickerid, 'W', close)
+
+rightborder = barstate.islast
+
+
+
+bband(timep, length, mult) =>
+	sma(timep, length) + mult * stdev(timep, length)
+keltner(timep, length, mult) =>
+	ema(timep, length) + mult * ema(tr, length)
+
+e1 = (highest(high, length) + lowest(low, length)) / 2 + sma(close, length)
+// osc = linreg(close - e1 / 2, length, 0)
+
+//osc_color = osc[1] < osc[0] ? osc[0] >= 0 ? #00ffff : #cc00cc : osc[0] >= 0 ? #009b9b : #ff9bff
+
+
+diff5 = bband(close5, length, lengthBB) - keltner(close5, length, lengthKC)
+sq_color5 = diff5 >= 0 ? green : red
+diff15 = bband(close15, length, lengthBB) - keltner(close15, length, lengthKC)
+sq_color15 = diff15 >= 0 ? green : red
+diff39 = bband(close39, length, lengthBB) - keltner(close39, length, lengthKC)
+sq_color39 = diff39 >= 0 ? green : red
+diff78 = bband(close78, length, lengthBB) - keltner(close78, length, lengthKC)
+sq_color78 = diff78 >= 0 ? green : red
+diff130 = bband(close130, length, lengthBB) - keltner(close130, length, lengthKC)
+sq_color130 = diff130 >= 0 ? green : red
+diffd = bband(closed, length, lengthBB) - keltner(closed, length, lengthKC)
+sq_colord = diffd >= 0 ? green : red
+diffw = bband(closew, length, lengthBB) - keltner(closew, length, lengthKC)
+sq_colorw = diffw >= 0 ? green : red
+
+// plot(osc, color=osc_color, style=histogram, linewidth=2)
+plot(0, color=sq_color5, style=circles, linewidth=3)
+plot(2, color=sq_color15, style=circles, linewidth=3)
+plot(4, color=sq_color39, style=circles, linewidth=3)
+plot(6, color=sq_color78, style=circles, linewidth=3)
+plot(8, color=sq_color130, style=circles, linewidth=3)
+plot(10, color=sq_colord, style=circles, linewidth=3)
+plot(12, color=sq_colorw, style=circles, linewidth=3)
+
+
+plotchar(color=sq_color5[0], char='*', size=size.normal, location=location.absolute)

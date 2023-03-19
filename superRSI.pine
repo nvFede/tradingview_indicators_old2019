@@ -1,0 +1,28 @@
+study('nvSuperRSI', overlay=false)
+
+theTicker = security(tickerid, "W", hlc3)
+
+the_vwap = vwap(theTicker)
+commonRsiValue = input(title="Common RSI Value", defval = 14)
+
+commonRsi = rsi(close,commonRsiValue) 
+isRsiAbove50 = commonRsi > 50 ? blue : red
+isRsiTrendUp = commonRsi > commonRsi[1] ? green : orange
+
+vwapRsi = rsi(the_vwap, 14)
+
+plot(commonRsi, color=isRsiTrendUp, linewidth=3, transp=2)
+plot(commonRsi, color=isRsiAbove50, linewidth=2, transp=2)
+plot(vwapRsi, color=white, linewidth=2,transp=50)
+
+wma_rsi = sma(close,3)
+rsi_wma = rsi(wma_rsi, 14)
+
+plot(rsi_wma, color=purple, linewidth=2,transp=0)
+
+topLine = hline(30)
+bottomLine = hline(70)
+fill(topLine, bottomLine, color=white, transp=90)
+
+stopLine = hline(10)
+sbottomLine = hline(90)

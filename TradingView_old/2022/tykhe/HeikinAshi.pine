@@ -1,0 +1,27 @@
+//@version=3
+study("Tykhe Heikin Ashi Smoothed Bars", overlay=true)
+
+useTrueRange = input(true, title="Usar rango verdadero?")
+length = input(21, minval=1, title="Media Periodos")
+mult = input(defval=0.618, title="Factor")
+
+
+ha_close = security(heikinashi(tickerid), period,close)
+ha_open = security(heikinashi(tickerid), period,open)
+ha_high = security(heikinashi(tickerid), period,high)
+ha_low = security(heikinashi(tickerid), period,low)
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+ma = ema(ha_close, length)
+range = useTrueRange ? tr : ha_high - ha_low
+rangema = ema(range, length)
+upper = ma + rangema * mult
+lower = ma - rangema * mult
+
+barc = ha_close  < lower ? bear_color : ha_close > lower and ha_close < upper  ? indecision_color : ha_close > upper ? bull_color : na
+
+
+plotcandle(ha_open, ha_high, ha_low, ha_close, color=barc)

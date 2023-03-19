@@ -1,0 +1,16 @@
+study(title="[nv] Ema Price Acceleration", overlay=true)
+
+ema_input = input(defval=21, title='Ema Period', type=integer) 
+
+price_open = open
+price_close = close 
+
+
+// Buscar tambien la forma de poner otro timeframe
+
+ema_price = ema(ohlc4, ema_input)
+
+value = ema_price * ( price_close / price_open )
+
+plot(value, linewidth=3)   
+ 

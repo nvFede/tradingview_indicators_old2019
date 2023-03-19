@@ -1,0 +1,11 @@
+//@version=3
+study(title="Volume for Price", shorttitle="Vol", precision=0)
+showMA = input(true)
+barColorsOnPrevClose = input(title="Color bars based on previous close", type=bool, defval=false)
+
+palette = barColorsOnPrevClose ? close[1] > close ? red : green : open > close ? red : green
+
+vol = volume * close
+
+plot(vol, color = palette, style=columns, title="Volume", transp=65)
+plot(showMA ? sma(vol,20) : na, style=area, color=blue, title="Volume MA", transp=65)

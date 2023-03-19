@@ -1,0 +1,34 @@
+//@version=3
+study("QS MultiSector Trend", overlay=false)
+
+useTrueRange = input(true)
+length = input(21, minval=1)
+mult = input(defval=0.618, title="Level 1")
+mult2 = input(defval=2.236, title="Level 2")
+
+get_trend(x, l, h) =>
+    ma = ema(x, length)
+    range = useTrueRange ? tr : h - l
+    rangema = ema(range, length)
+    upper = ma + rangema * mult
+    second_upper = ma + rangema * mult2
+    lower = ma - rangema * mult
+    second_lower = ma - rangema * mult2
+    barc = x > lower and x < upper ? yellow : x < lower and x > second_lower  ? red : x < second_lower ? #AA0000 : x > upper and x < second_upper ? green : x > second_upper ? lime : na
+
+
+
+
+xlv_close = security("XLV", period, close)
+xlv_high = security("XLV", period, high)
+xlv_low = security("XLV", period, low)
+xlv_trend = get_trend(xlv_close, xlv_low, xlv_high)
+plot(0, color=xlv_trend,style=circles,linewidth=5, title="XLV" )
+p_xlv =  plotshape(barstate.islast ? 0 : na , color=red, text="XLV",textcolor=white, style=shape.labeldown, location=location.absolute, offset=1)
+
+xlf_close = security("XLF", period, close)
+xlf_high = security("XLF", period, high)
+xlf_low = security("XLF", period, low)
+xlf_trend = get_trend(xlf_close, xlf_low, xlf_high)
+plot(10, color=xlf_trend,style=circles,linewidth=5, title="XLF" )
+p_xlf =  plotshape(barstate.islast ? 10 : na , color=red, text="XLF",textcolor=white, style=shape.labeldown, location=location.absolute, offset=1) 

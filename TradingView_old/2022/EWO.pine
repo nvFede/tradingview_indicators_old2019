@@ -1,0 +1,5 @@
+//@version=3
+study("Elliott Wave Oscillator")
+s2=ema(close, 5) - ema(close, 34)
+c_color=s2 <= 0 ? red : lime
+plot(s2, color=c_color, style=histogram, linewidth=2)

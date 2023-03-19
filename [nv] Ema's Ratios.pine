@@ -1,0 +1,18 @@
+study("[nv] Ema's Ratios", overlay=false)
+
+//inputtype = input(title="")
+
+ticker = close
+
+// moving averages
+
+ema_fast = input(title="EMA Period", type=integer, defval=50)
+myEmaFast=ema(ticker, ema_fast)
+
+ema_slow = input(title="EMA Period", type=integer, defval=150)
+myEmaSlow=ema(ticker, ema_slow)
+
+ratio =  myEmaSlow / myEmaFast
+
+
+plot(ratio, color = red, style = line, linewidth = 3)

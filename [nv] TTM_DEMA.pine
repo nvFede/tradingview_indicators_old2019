@@ -1,0 +1,25 @@
+study(title="[nv]TTM_DEMA", overlay=true)
+
+use_vwap = input(false, title="use VWAP ?", type=bool)
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+// price
+the_vwap = vwap(hlc3)
+price = use_vwap ? close : vwap(hlc3)
+// tipo de media movil
+use_dema = input(false, title="use DEMA ?", type=bool)
+
+line_01 = use_dema ? make_dema(price,8) : ema(price,8)
+line_03 = use_dema ? make_dema(price,13) : ema(price,13)
+line_05 = use_dema ? make_dema(price,21) : ema(price,21)
+line_07 = use_dema ? make_dema(price,34) : ema(price,34)
+line_09 = use_dema ? make_dema(price,55) : ema(price,55)
+
+plot(line_01, linewidth=3, color=red)
+plot(line_03, linewidth=3, color=red)
+plot(line_05, linewidth=3, color=red)
+plot(line_07, linewidth=3, color=red)
+plot(line_09, linewidth=3, color=red)
+
+
+// mediumTrendColor = close > ema50 ? lime : red
+fill(line_01,line_03, color=red , transp=77	)

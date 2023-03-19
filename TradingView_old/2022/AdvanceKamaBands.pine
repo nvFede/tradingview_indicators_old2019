@@ -1,0 +1,28 @@
+//@version=2
+study(title="QS Advanced KAMA Bands", overlay = true)
+length = input(21, minval=1)
+src = input(hl2, type=source)
+
+
+make_kame(x, y) =>
+    xvnoise = abs(x - x[1])
+    nfastend = 0.666
+    nslowend = 0.0645
+    nsignal = abs(x - x[y])
+    nnoise = sum(xvnoise, y)
+    nefratio = iff(nnoise != 0, nsignal / nnoise, 0)
+    nsmooth = pow(nefratio * (nfastend - nslowend) + nslowend, 2)
+    KAMA = nz(KAMA[1]) + nsmooth * (x - nz(KAMA[1]))
+
+ma = make_kame(src, length)
+
+uBand = ma * 1.1
+lBand = ma * 0.9
+
+maColor = ma > ma[1] ? green : red
+
+
+plot(ma, color=maColor, linewidth=4, title="KAMA")
+plot(ma, color=yellow, title="KAMA", transp=70, linewidth=2 )
+plot(uBand, color=green, title="Upper Band", linewidth=3)
+plot(lBand, color=red, title="Lower Band", linewidth=3)

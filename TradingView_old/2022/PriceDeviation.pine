@@ -1,0 +1,19 @@
+//@version=3
+study(title="Price Deviation", overlay=false)
+
+src = input(hlc3)
+t = time("D")
+start = na(t[1]) or t > t[1]
+
+sumSrc = src * volume
+sumVol = volume
+sumSrc := start ? sumSrc : sumSrc + sumSrc[1]
+sumVol := start ? sumVol : sumVol + sumVol[1]
+
+// You can use built-in vwap() function instead.
+vwap  = sumSrc / sumVol
+
+price_action = cum((close - vwap)) * 10
+reg = linreg(price_action, 21,0)
+plot(price_action, style=line, color=blue, linewidth=2)
+plot(reg, style=line, color=orange) 

@@ -1,0 +1,48 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("Tykhe Sentiment Indicator", shorttitle="Market Sentiment")
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+spx_close = security("spx", timeframe.period, close)
+vix_close = security("vix", timeframe.period, close)
+
+s5fi_close = security("S5FI", timeframe.period, close) / 10 - 5
+s5th_close = security("S5TH", timeframe.period, close) / 10 - 5
+pcspx_close =  sma(security("PCSPX", timeframe.period, close) + 5, 5)
+
+val = input(20)
+h = input(high)
+
+smoothing_factor = input(title="Smoothing Factor: ", defval=5, minval=0)
+
+rsi_spx = (rsi(spx_close, 14) / 10) - 5
+
+mom_spx = mom(spx_close, 10)
+
+market_volatility = -((highest(h, val) - low) / highest(h, val) * 10 - 10)
+
+calc_zvwap(src, pds) =>
+    mean = sma(src, pds)
+    vwapsd = stdev(src, pds)
+    (src - mean) / vwapsd
+
+sma_200 = calc_zvwap(spx_close, 200) * 4
+sma_100 = calc_zvwap(spx_close, 100) * 4
+sma_50 = calc_zvwap(spx_close, 50) * 4
+sma_21 = calc_zvwap(spx_close, 21) * 4
+
+sentiment = market_volatility + rsi_spx + sma_200 + sma_100 + sma_50 + sma_21 + s5fi_close + 
+   s5th_close + pcspx_close
+
+hline(0, color=indecision_color)
+
+sen  = linreg(sentiment, 5, 0)
+
+sentiment_color = sen > 0 ? bull_color :  bear_color
+
+plot(sen, style=plot.style_columns, color=sentiment_color )

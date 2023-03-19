@@ -1,0 +1,30 @@
+//@version=4
+study(title="On Balance Volume", shorttitle="OBV", format=format.volume, resolution="")
+src = close
+obv = cum(sign(change(src)) * volume)
+short = input(21)
+long = input(100)
+
+smoothness = input(5)
+
+long_sma = sma(obv, long) 
+short_sma = sma(obv, short)
+
+rp  = ( obv / close ) * 100
+
+mrp_long = (( rp / sma(rp, long) -1) )* 100
+mrp_short = (( rp / sma(rp, short) -1) )* 100
+//plot(mrp, color=#ffffff, title="OnBalanceVolume")
+
+smooth_mrp_short = ema(mrp_short, smoothness)
+smooth_mrp_color_short = smooth_mrp_short > 0 ? color.green : color.red
+
+smooth_mrp_long= ema(mrp_long, smoothness)
+smooth_mrp_color_long = smooth_mrp_long > 0 ? color.green : color.red
+
+plot(smooth_mrp_short, color=smooth_mrp_color_short, style=plot.style_columns, transp=50)
+plot(smooth_mrp_long, color=smooth_mrp_color_long, style=plot.style_columns, transp=50)
+
+hline(0)
+
+//plot(sma)

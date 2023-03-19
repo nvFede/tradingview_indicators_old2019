@@ -1,0 +1,22 @@
+//@version=3
+study(title="[nv]BB Volume Colored V2", overlay=false)
+length = input(21, minval=1)
+src = input(hl2, title="Source")
+mult = input(2.0, minval=0.001, maxval=50)
+basis = ema(src, length)
+dev = mult * stdev(src, length)
+upper = basis + dev
+lower = basis - dev
+
+
+vol = volume * ohlc4
+
+media = sma(vol, 21)
+
+color_bars = iff(src > basis and src < upper, blue, iff(src > basis and src > upper, #0388FF,iff(src < basis and src < lower, #cc00cc,iff(src < basis and src > lower, #BD003A, gray))))
+
+plot(vol, color=color_bars, style=columns)
+
+media_color = media > media[1] ? yellow : orange
+
+plot(media, color=green, linewidth=2)

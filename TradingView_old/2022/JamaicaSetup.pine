@@ -1,0 +1,111 @@
+//@version=2
+study("QS Jamaica Setup", overlay=true)
+
+useTrueRange = input(true)
+length = input(21, minval=1)
+mult = input(0.618)
+mult2 = input(2.236)
+multAlert = input(3.14)
+src = input(hl2, title="Source")
+
+longTrendLength = input(200, title="Long Trend Lenght")
+
+ma = ema(src, length)
+range = useTrueRange ? tr : high - low
+rangema = ema(range, length)
+upper = ma + rangema * mult
+second_upper = ma + rangema * mult2
+lower = ma - rangema * mult
+second_lower = ma - rangema * mult2
+
+Alertupper = ma + rangema * multAlert
+Alertlower = ma - rangema * multAlert
+
+barc = close > lower and close < upper ? yellow : close < lower and close > second_lower  ? red : close < second_lower ? #AA0000 : close > upper and close < second_upper ? green : close > second_upper ? lime : na
+
+plotbar(open, high, low, close, color=barc)
+
+
+//
+//  Reversion Hats
+//
+
+upperReversionAlert = close > Alertupper
+lowerReversionAlert = close < Alertlower
+plotchar(upperReversionAlert, char='◠',color=white, location=location.abovebar, size=size.tiny)
+plotchar(lowerReversionAlert, char='◡',color=white, location=location.belowbar, size=size.tiny)
+
+//
+//  ANUAL PIVOTS
+//
+
+sy = input(true, title="Show Yearly Pivots?")
+sh3 = input(false, title="Show R3 & S3?")
+
+isCurrentYear = year(timenow) == year(time)
+
+//Classic Pivot Calculations
+pivot = (high + low + close ) / 3.0
+r1 = pivot + (pivot - low)
+s1 = pivot - (high - pivot)
+r2 = pivot + (high - low)
+s2 = pivot - (high - low)
+r3 = sh3 and r1 + (high - low) ? r1 + (high - low) : na
+s3 = sh3 and s1 - (high - low) ? s1 - (high - low) : na
+
+
+//Yearly Pivots
+ytime_pivot = security(tickerid, '12M', pivot[1])
+ytime_R1 = security(tickerid, '12M', r1[1])
+ytime_S1 = security(tickerid, '12M', s1[1])
+ytime_R2 = security(tickerid, '12M', r2[1])
+ytime_S2 = security(tickerid, '12M', s2[1])
+ytime_R3 = security(tickerid, '12M', r3[1])
+ytime_S3 = security(tickerid, '12M', s3[1])
+//Yearly Pivots Plots
+plot(sy and ytime_pivot and isCurrentYear ? ytime_pivot : na, title="Yearly Pivot",style=circles, color=yellow,linewidth=2)
+plot(sy and ytime_R1 and isCurrentYear? ytime_R1 : na, title="Yearly R1",style=circles, color=lime,linewidth=2)
+plot(sy and ytime_S1 and isCurrentYear? ytime_S1 : na, title="Yearly S1",style=circles, color=red,linewidth=2)
+plot(sy and ytime_R2 and isCurrentYear? ytime_R2 : na, title="Yearly R2",style=circles, color=lime,linewidth=2)
+plot(sy and ytime_S2 and isCurrentYear? ytime_S2 : na, title="Yearly S2",style=circles, color=red,linewidth=2)
+plot(sy and ytime_R3 and isCurrentYear? ytime_R3 : na, title="Yearly R3",style=circles, color=green,linewidth=2)
+plot(sy and ytime_S3 and isCurrentYear? ytime_S3 : na, title="Yearly S3",style=circles, color=maroon,linewidth=2)
+
+//
+//  ATR STOP
+//
+
+st = input(true, title="Show SuperTrend ATR?")
+
+Factor=input(title="Super Trend", defval=3, minval=1,maxval = 100)
+ATR=input(title="ATR", defval=7, minval=1,maxval = 100)
+
+//Super Trend ATR
+Up=hl2-(Factor*atr(ATR))
+Dn=hl2+(Factor*atr(ATR))
+
+TUp=close[1]>TUp[1]? max(Up,TUp[1]) : Up
+TDown=close[1]<TDown[1]? min(Dn,TDown[1]) : Dn
+
+Trend = close > TDown[1] ? 1: close< TUp[1]? -1: nz(Trend[1],1)
+Tsl = Trend==1? TUp: TDown
+
+linecolor = Trend == 1 ? green : red
+
+plot(st ? Tsl : na, color = linecolor , style = line , linewidth = 1,title = "SuperTrend ATR", linewidth=2)
+
+//
+//  WMA 30
+//
+sec= security(tickerid, period, close)
+show_wma30 = input(true, title="Show WMA 30?")
+wma30 = wma(sec, 30)
+color_wma30 = wma30 > wma30[1] ? lime : red
+plot(show_wma30 ? wma30 : na, color=color_wma30, style=circles, linewidth=2)
+
+//
+//  Long Trend
+//
+sma200 = sma(close,longTrendLength)
+long_trend_color = close > sma200 ? green : red
+bgcolor(long_trend_color, transp=91)

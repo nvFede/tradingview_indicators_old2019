@@ -1,0 +1,32 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+//@version=3
+study("W-Score", shorttitle="W-Score")
+length=input(21)
+
+smooth = input(title="smoothness", defval=5, minval=0)
+
+calc_zvwap(pds) =>
+	mean = wma(close, length)
+	//vwapsd = sqrt(sma(pow(close-mean, 2), pds) )
+	vwapsd = stdev(close, pds)
+	(close-mean)/vwapsd
+
+plot(0)
+upperTop=input(2.5)
+upperBottom=input(2.0)
+lowerTop=input(-2.5)
+lowerBottom=input(-2.0)
+
+plot(1, style=3, color=gray), plot(-1, style=3, color=gray)
+ul1=plot(upperTop, "OB High")
+ul2=plot(upperBottom, "OB Low")
+fill(ul1,ul2, color=red)
+ll1=plot(lowerTop, "OS High")
+ll2=plot(lowerBottom, "OS Low")
+fill(ll1,ll2, color=green)
+
+zw = calc_zvwap(length)
+zws = linreg(zw, smooth, 0)
+plot(zws,title="ZVWAP",color=maroon, linewidth=2)

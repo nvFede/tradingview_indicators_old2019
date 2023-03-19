@@ -1,0 +1,10 @@
+//@version=3
+study("CPM")
+CPM = volume * close
+max_vol = highest(volume, 52)
+vol_med = ((CPM * 100 / max_vol) * 4/5)
+vol_ponderado = ema(vol_med, 52)
+plot_cpm = vol_med - vol_ponderado
+
+plot_color = plot_cpm > 0 ? blue : red
+plot(plot_cpm, style=columns, color=plot_color)

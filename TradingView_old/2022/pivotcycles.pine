@@ -1,0 +1,58 @@
+//@version=3
+study("Pivot cycles - JD")
+len_piv=input(6,"pivot length")
+len_th=input(10,"threshold unit")
+
+ph=pivothigh(close,len_piv,len_piv/2)
+pl=pivotlow(close,len_piv,len_piv/2)
+ZZ=na
+ZZ:=
+ ph!=0?ph:
+ pl!=0?pl:na
+last_pivot=na
+last_pivot:=
+ ph!=0?1:
+ pl!=0?-1:last_pivot[1]
+switch=na
+switch:=
+ (ph!=0 and last_pivot[1]==-1) or
+ (pl!=0 and last_pivot[1]==1)
+
+up_cycle=na
+down_cycle=na
+up_cycle:= ph!=0?1:up_cycle[1]+1
+down_cycle:= pl!=0?1:down_cycle[1]+1
+
+top=na
+top:= switch?
+ ph!=0?up_cycle[1]:
+ pl!=0?-down_cycle[1]:na:na
+
+plot(0,color=na)
+plot(1*len_th,color=color(maroon,20))
+plot(2*len_th,color=red)
+plot(3*len_th,color=color(fuchsia,40))
+plot(4*len_th,color=color(fuchsia,20))
+plot(4.5*len_th,color=color(fuchsia,0))
+plot(-1*len_th,color=color(green,50))
+plot(-2*len_th,color=green)
+plot(-3*len_th,color=color(lime,40))
+plot(-4*len_th,color=color(lime,20))
+plot(-5*len_th,color=color(lime,0))
+up_color=
+ up_cycle>5*len_th?color(lime,0):
+ up_cycle>4*len_th?lime:
+ up_cycle>3*len_th?color(green,0):
+ up_cycle>2*len_th?color(green,10):
+ up_cycle>1*len_th?color(green,30):
+ up_cycle<=1*len_th?color(green,50):na
+down_color=
+ down_cycle>5*len_th?color(fuchsia,0):
+ down_cycle>4*len_th?fuchsia:
+ down_cycle>3*len_th?color(red,0):
+ down_cycle>2*len_th?color(red,10):
+ down_cycle>1*len_th?color(red,30):
+ down_cycle<=1*len_th?color(red,50):na
+plot(up_cycle,style=columns,color=up_color,offset=-len_piv/2)
+plot(-down_cycle,style=columns,color=down_color,offset=-len_piv/2)
+plot(top,style=line,color=yellow,offset=-len_piv/2)

@@ -1,0 +1,46 @@
+//@version=1
+strategy("[nv] Golden Cross Strategy", overlay=true)
+
+// Double Media Exponential function
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+make_tema(x, y) => ( 3 * ema(x,y)) - 3 * (ema(round(ema(x,y)),y)) + ema(round((ema(round(ema(x,y)),y))),y)
+make_qema(x, y) => 5*ema(x,y)-10*(ema(round(ema(x,y)),y))+10*(ema(round((ema(round(ema(x,y)),y))),y))-5* ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)+ema(round(ema(round((ema(round((ema(round(ema(x,y)),y))),y))),y)),y)
+///////////////////////// 
+// Super long EMA 200  //
+/////////////////////////
+
+use_ema200 = input(true, title = "Show Long Trend ? ", type=bool)
+ema200 = use_ema200 ? sma(close,200): na
+ema200_isAbove = ema200 > ema(close[2],200)
+color_ema200_trend = ema200_isAbove ? green : red
+plot(ema200, color=color_ema200_trend, linewidth=2, transp=0)
+
+
+///////////////////////// 
+// Medium trend EMA 50 //
+/////////////////////////
+
+closePrice = plot(close, linewidth=0) 
+ema50 = sma(close,50)
+ema50_isAbove = ema50 > ema(close[2],50)
+color_ema50_trend = ema50_isAbove ? #E8D806 : #FF6B03
+emaPlot = plot(ema50, color=color_ema50_trend)
+mediumTrendColor = close > ema50 ? #E8C216 : #FF8A0C
+// fill(closePrice,emaPlot, color=mediumTrendColor , transp=60	)
+
+////////////////////////// 
+// Golden & Death Cross //
+//////////////////////////
+buyGoldenCross = crossover(ema50,ema200) 
+sellGoldenCross= crossunder(ema50,ema200)
+
+
+strategy.entry("BUY", strategy.long, 1, when = buyGoldenCross)
+strategy.close("BUY", when = crossunder(close, sma(close,200)))
+
+strategy.entry("SELL", strategy.short, 1, when = sellGoldenCross)
+strategy.close("SELL", when = crossover(close, sma(close,200)))
+
+//goldenAbove = ema50 > ema200
+plotchar(buyGoldenCross, char='❂', color=yellow, location=location.bottom, size=size.small, transp=1)
+plotchar(sellGoldenCross, char='❂', color=red, location=location.bottom, size=size.small, transp=1)

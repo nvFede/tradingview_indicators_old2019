@@ -1,0 +1,56 @@
+//@version=3
+study(title="nv Sector Strenght Test", overlay=false)
+
+spy = security('SPY', period, close)
+
+XLY = security('XLY', period, close)
+XLI = security('XLI', period, close)
+XLRE = security('XLRE', period, close)
+XLE = security('XLE', period, close) 
+XLF = security('XLF', period, close)
+XLK = security('XLK', period, close)
+XLB = security('XLB', period, close)
+XLU = security('XLU', period, close)
+XLP = security('XLP', period, close)
+XLC = security('XLC', period, close)
+XLV = security('XLV', period, close)
+
+XLY_sma_50 = sma(XLY, 50) 
+XLI_sma_50 = sma(XLI, 50) 
+XLRE_sma_50 = sma(XLRE, 50) 
+XLE_sma_50 = sma(XLE, 50) 
+XLF_sma_50 = sma(XLF, 50) 
+XLK_sma_50 = sma(XLK, 50) 
+XLB_sma_50 = sma(XLB, 50) 
+XLU_sma_50 = sma(XLU, 50) 
+XLP_sma_50 = sma(XLP, 50) 
+XLC_sma_50 = sma(XLC, 50) 
+XLV_sma_50 = sma(XLV, 50) 
+
+XLY_sma_200 = sma(XLY, 200)
+XLI_sma_200 = sma(XLI, 200)
+XLRE_sma_200 = sma(XLRE, 200)
+XLE_sma_200 = sma(XLE, 200)
+XLF_sma_200 = sma(XLF, 200)
+XLK_sma_200 = sma(XLK, 200)
+XLB_sma_200 = sma(XLB, 200)
+XLU_sma_200 = sma(XLU, 200)
+XLP_sma_200 = sma(XLP, 200)
+XLC_sma_200 = sma(XLC, 200)
+XLV_sma_200 = sma(XLV, 200)
+
+sum = 0
+
+XLY_above = XLY_sma_50 > XLY_sma_200 ? sum := sum + 1 else sum := sum 
+XLI_above = XLI_sma_50 > XLI_sma_200 ? sum := sum + 1 : sum := sum 
+XLRE_above = XLRE_sma_50 > XLRE_sma_200 ? sum := sum + 1 : sum := sum 
+XLE_above = XLE_sma_50 > XLE_sma_200 ? sum := sum + 1 : sum := sum 
+XLF_above = XLF_sma_50 > XLF_sma_200 ? sum := sum + 1 : sum := sum 
+XLK_above = XLK_sma_50 > XLK_sma_200 ? sum := sum + 1 : sum := sum 
+XLB_above = XLB_sma_50 > XLB_sma_200 ? sum := sum + 1 : sum := sum 
+XLU_above = XLU_sma_50 > XLU_sma_200 ? sum := sum + 1 : sum := sum 
+XLP_above = XLP_sma_50 > XLP_sma_200 ? sum := sum + 1 : sum := sum 
+XLC_above = XLC_sma_50 > XLC_sma_200 ? sum := sum + 1 : sum := sum 
+XLV_above = XLV_sma_50 > XLV_sma_200 ? sum := sum + 1 : sum := sum 
+
+plot(close)

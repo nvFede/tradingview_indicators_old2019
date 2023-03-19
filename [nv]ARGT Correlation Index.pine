@@ -1,0 +1,39 @@
+study(title="[nv]ARGT Correlation Index", shorttitle="[nv]ARGT", overlay=false)
+
+CENCO = security("CENCOSUD", period, close)
+PESO_CHILENO=security("USDCLP", period, close)
+PESO_ARGENTINO = security("USDARS", period, close)
+PGR_AR = security("BCBA:PGR", period, close)
+
+
+TS = security("TS", period, close)
+MELI = security("MELI", period, close)
+GGAL = security("GGAL", period, close)
+BMA = security("BMA", period, close)
+YPF = security("YPF", period, close)
+TEO = security("TEO", period, close)
+PAM = security("PAM", period, close)
+TGS = security("TGS", period, close)
+GLOB = security("GLOB", period, close)
+ARCO = security("ARCO", period, close)
+BFR = security("BFR", period, close)
+AGRO = security("AGRO", period, close)
+SSRM = security("SSRM", period, close)
+CEPU = security("CEPU", period, close)
+LOMA = security("LOMA", period, close)
+CCU = security("CCU", period, close)
+AKO = security("AKO.A", period, close)
+CENCOSUD = CENCO/PESO_CHILENO 
+SUPV = security("SUPV", period, close)
+CRESF = security("CRESF", period, close)
+DESP = security("DESP", period, close)
+PAAS = security("PAAS", period, close)
+IRCP = security("IRCP", period, close)
+CAAP = security("CAAP", period, close)
+PGCSF = security("PGCSF", period, close)
+PGR = PGR_AR / PESO_ARGENTINO
+ARGT_TOT =	TS +MELI +GGAL+BMA+YPF+TEO+PAM+TGS+GLOB+ARCO+BFR+AGRO+SSRM+CEPU+LOMA+CCU+AKO+CENCOSUD+SUPV+CRESF+DESP+PAAS+IRCP+CAAP+PGCSF+PGR
+
+ARGT_PLOT = ARGT_TOT / 26
+
+plot(ARGT_PLOT, linewidth=5, color=red)

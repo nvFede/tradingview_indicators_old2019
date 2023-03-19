@@ -1,0 +1,24 @@
+//@version=3
+strategy("[nv] Dema Strategy", overlay=true)
+
+slowPeriod    = input(defval =17, title = "DEMA FAST Period", minval = 2)
+fastPeriod = input(defval = 9, title = "DEMA SLOW Period", minval = 1)
+res = input(title="Resolution  - not lower than chart", type=resolution, defval="D")
+
+demaFast =  security(tickerid, res, 2 * ema(close, fastPeriod) - ema(ema(close, fastPeriod), fastPeriod)  )
+demaSlow  = security(tickerid,res, 2 * ema(close, slowPeriod) - ema(ema(close, slowPeriod), slowPeriod)  )
+
+
+
+buy = crossover(demaSlow, demaFast)
+sell = crossunder(demaSlow, demaFast)
+
+bgcolor( buy[1] ? lime : na, transp=0)
+bgcolor( sell[1] ? red : na, transp=0)
+
+bgcolor( demaSlow > demaFast  ? lime : na, transp=95)
+bgcolor( demaSlow < demaFast  ? red : na, transp=95)
+
+strategy.entry("BUY", strategy.long, 1, when = buy)
+strategy.entry("SELL", strategy.short, 1, when = sell ) 
+

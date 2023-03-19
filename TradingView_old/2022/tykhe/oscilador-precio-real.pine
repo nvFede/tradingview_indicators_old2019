@@ -1,0 +1,18 @@
+//@version=3
+study("Tykhe - Oscilador de Precio Real")
+
+suavizado  =input(title="Suavizado: ", defval=10, minval=0)
+
+v = vwap(hlc3)
+ind = ((close  / v) - 1) * 1000
+osc = linreg(ind, suavizado, 0)
+
+bull_color = #058ac5
+neutral_color = #dde4c5
+bear_color = #ff583e
+
+osc_color = osc > 0 ? bull_color : bear_color
+
+plot(osc, color=osc_color, style=histogram, linewidth=3)
+//plot(lin, color=neutral_color, linewidth=3)
+hline(0, linestyle=dashed, color=neutral_color)

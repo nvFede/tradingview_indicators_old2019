@@ -1,0 +1,88 @@
+//@version=3
+study("nvTrend", overlay=true)
+
+// Double Media Exponential function
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+// Hull moving Average function
+make_hma(_src, _length) =>  wma((2 * wma(_src, _length / 2)) - wma(_src, _length), round(sqrt(_length)))
+
+
+
+//medium Trend
+
+//super-long-trend ema200
+ema200 = ema(close,200)
+isAbove = ema200 > ema(close[2],200)
+colorLongtrend = isAbove ? green : red
+plot(ema200, color=colorLongtrend, linewidth=2, transp=0)
+
+
+// medium Trend & ema50 
+closePrice = plot(close, linewidth=0) 
+ema50 = ema(close,50)
+emaPlot = plot(ema50, color=white)
+//isAbove = close > ema50 ? 1 : 0
+//isBelow = fib2 < fib1 ? 1 : 0
+mediumTrendColor = close > ema50 ? lime : red
+fill(closePrice,emaPlot, color=mediumTrendColor , transp=77	)
+//title_medium = input(title="Medium Trend")
+md_super_fast = input(title="Super-fast Trend MA: ",defval=35)
+md_fast = input(title="Fast Trend MA: ", defval=55)
+md_slow = input(title="Slow Trend MA: ", defval=89)
+md_line_fast = make_hma(close,md_fast) 
+md_line_slow = make_hma(close,md_slow) 
+zone_f1 = plot(md_line_fast, color= #00EAFF, linewidth=0, offset=0)
+zone_f2 = plot(md_line_slow, color=#FF0DFF, linewidth=0, offset=0)
+//plot(fast_trend_stop, color=white, linewidth=2, offset=0)
+sfastTrendColor = md_line_fast  > md_line_slow  ? green : red
+fill(zone_f1,zone_f2, color=sfastTrendColor , transp=1)
+
+
+
+// fast Trend
+ma_super_fast = input(title="Super-fast Trend MA: ",defval=8)
+ma_fast = input(title="Fast Trend MA: ", defval=21)
+ma_slow = input(title="Slow Trend MA: ", defval=34)
+fast_trend_stop = make_hma(close,ma_super_fast) 
+fib1 = make_hma(close,ma_fast) 
+fib2 = make_hma(close,ma_slow) 
+zone1 = plot(fib1, color= #00EAFF, linewidth=0, offset=0)
+zone2 = plot(fib2, color=#FF0DFF, linewidth=0, offset=0)
+plot(fast_trend_stop, color=white, linewidth=2, offset=0)
+fastTrendColor = fib1 > fib2 ? green : red
+fill(zone1,zone2, color=fastTrendColor , transp=1)
+
+
+// Superfast HULL
+// hull_1 = make_hma(close,8) + ( close * 35 ) / 100
+// hull_2 = make_hma(close,13) + ( close * 35 ) / 100
+// zone_fast_1 = plot(hull_1, color=#FF0000, linewidth=3, offset=0)
+// zone_fast_2 = plot(hull_2, color=#FF7F00, linewidth=3, offset=0)
+// superFastTrendColor = hull_1 > hull_2 ? #00EAFF : #FF0DFF
+// fill(zone_fast_1,zone_fast_2, color=superFastTrendColor , transp=1)
+
+// RSI - Avisa tmb cuando vender o comprar
+use_rsi = input(true, title = "Use RSI", type=bool)
+
+rsi_value = use_rsi ? rsi(close,14) : na
+
+high_cross = rsi_value > 74
+plotshape(high_cross, style=shape.triangleup, location=location.abovebar)
+low_cross = rsi_value < 26
+plotshape(low_cross, style=shape.triangledown, location=location.belowbar)
+
+// STAN WEINSTEIN
+// use_wma = input(true, title = "Use Stan We", type=bool)
+// _wma = input(title="WMA", type=integer, defval=30)
+// src = input(title="Source", type=source, defval=close)
+// res = input(title="Time Frame", type=resolution, defval="W")
+// htf_ma2 = wma(src, _wma)
+// out = security(tickerid, res, htf_ma2)
+// plot(out, color=red, linewidth=2, style=circles)
+
+
+// STAN WEINSTEIN
+use_wma = input(true, title = "Use Stan Weinstein?", type=bool)
+htf_ma2 = use_wma ? wma(close, 30) : na
+out = security(tickerid, "W", htf_ma2)
+plot(out, color=red, linewidth=2, style=circles)

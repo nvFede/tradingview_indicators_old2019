@@ -1,0 +1,29 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("TEMA Smoothing", overlay=true)
+
+fast_input = input(10)
+slow_input = input(20)
+
+trend_input = input(50)
+
+smoothing_factor = input(3)
+
+
+//TEMA
+tema(_src, inp) =>
+    ema = ema(_src, inp)
+    ema1 = ema(ema, inp)
+    ema2 = ema(ema1, inp)
+    tema = 3 * (ema - ema1) + ema2
+    tema
+
+fast = tema(close, fast_input)
+slow = tema(close, slow_input)
+trend = tema(close, trend_input)
+
+plot(sma(fast, smoothing_factor), color=color.red)
+plot(sma(slow, smoothing_factor), color=color.blue)
+plot(sma(trend, smoothing_factor), color=color.green)

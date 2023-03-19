@@ -1,0 +1,49 @@
+//@version=3
+//By Glaz
+//Modifications:
+// Added Columns to show when signal is outside of Thresh Hold Channnel.
+// Set default Parameters to match QQE Cross Alert indicator.
+//
+study("QQE MT4 Glaz-modified by JustUncleL")
+RSI_Period = input(14,title='RSI Length')
+SF = input(5,title='RSI Smoothing')
+QQE=input(4.238,title='Fast QQE Factor')
+ThreshHold=input(10,title="Thresh-hold")
+//
+sQQEx   = input(false,title="Show Smooth RSI, QQE Signal crosses")
+sQQEz   = input(false,title="Show Smooth RSI Zero crosses")
+sQQEc   = input(false,title="Show Smooth RSI Thresh Hold Channel Exits")
+
+src = input(close,title="RSI Source")
+//
+
+//
+Wilders_Period = RSI_Period * 2 - 1
+
+
+Rsi = rsi(src,RSI_Period)
+RsiMa = ema(Rsi, SF)
+AtrRsi = abs(RsiMa[1] - RsiMa)
+MaAtrRsi = ema(AtrRsi, Wilders_Period)
+dar = ema(MaAtrRsi,Wilders_Period) * QQE
+
+longband = 0.0
+shortband=0.0
+trend = 0
+
+DeltaFastAtrRsi= dar
+RSIndex=RsiMa
+newshortband=  RSIndex + DeltaFastAtrRsi
+newlongband= RSIndex - DeltaFastAtrRsi
+longband := RSIndex[1] > longband[1] and RSIndex > longband[1]? max(longband[1],newlongband):newlongband
+shortband := RSIndex[1] < shortband[1] and  RSIndex < shortband[1]? min(shortband[1], newshortband):newshortband
+trend := cross(RSIndex, shortband[1])?1:cross(longband[1], RSIndex)?-1:nz(trend[1],1)
+FastAtrRsiTL = trend==1? longband: shortband
+
+
+hcolor = (RsiMa-50)>ThreshHold? green : (RsiMa-50)<0-ThreshHold ? red : orange
+plot(FastAtrRsiTL-50,color=blue,transp=0,linewidth=2)
+p1=plot(RsiMa-50,color=orange,transp=0,linewidth=2)
+plot(RsiMa-50,color=hcolor,transp=50,style=columns)
+
+//EOF

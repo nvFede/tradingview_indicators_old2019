@@ -1,0 +1,44 @@
+//@version=3
+study("Tykhe - QQE", overlay=false)
+
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+smoothness = input(5, title="Smoothness", minval=1, maxval=100)
+r =  wma(rsi(close, 14), smoothness)
+Factor = input(4.238, title="[ST] Factor", minval=1, maxval=100, type=float)
+Pd = input(7, title="[ST] PD", minval=1, maxval=100)
+
+
+
+
+Supertrend(source, Factor, Pd) =>
+    Up = source - Factor * atr(Pd)
+    Dn = source + Factor * atr(Pd)
+
+    Trend = 0.0
+    TrendUp = 0.0
+    TrendUp := source[1] > TrendUp[1] ? max(Up, TrendUp[1]) : Up
+    TrendDown = 0.0
+    TrendDown := source[1] < TrendDown[1] ? min(Dn, TrendDown[1]) : Dn
+
+    Trend := source > TrendDown[1] ? 1 : source < TrendUp[1] ? -1 : nz(Trend[1], 1)
+    Tsl = Trend == 1 ? TrendUp : TrendDown
+
+    Tsl
+
+
+Tsl = Supertrend(r, Factor, Pd)
+
+t = wma(Tsl, smoothness)
+
+t_color = t > r ? bear_color : bull_color
+
+plot(r, linewidth=2, color=t_color)
+plot(t, linewidth=2, color=indecision_color)
+
+hline(50)
+hline(75)
+hline(25)

@@ -1,0 +1,43 @@
+//@version=3
+study(title="Keltner Channels", shorttitle="KC", overlay=true)
+useTrueRange = input(true)
+length = input(21, minval=1)
+mult = input(1.0)
+src = input(close, title="Source")
+
+ma = ema(src, length)
+range = useTrueRange ? tr : high - low
+rangema = ema(range, length)
+upper = ma + rangema * mult
+lower = ma - rangema * mult
+
+plot_color = ma >= ma[1] ? blue : red
+u = plot(upper, color=plot_color, title="Upper", style=circles)
+plot(ma, color=plot_color, title="Basis", linewidth=3)
+l = plot(lower, color=plot_color, title="Lower", style=circles)
+// fill(u, l, color=c)
+
+// CANAL DOS
+ma2 = ema(src, 21)
+range2 = useTrueRange ? tr : high - low
+rangema2 = ema(range, 21)
+upper2 = ma2 + rangema2 *  2
+lower2 = ma2 - rangema2 *  2
+
+plot_color_2 = ma2 >= ma2[1] ? blue : red
+plot(upper2, color=plot_color_2, title="Upper", style=circles)
+plot(lower2, color=plot_color_2, title="Lower", style=circles)
+// // fill(u, l, color=c)
+
+
+// CANAL TRES
+ma3 = ema(src, 21)
+range3 = useTrueRange ? tr : high - low
+rangema3 = ema(range, 21)
+upper3 = ma3 + rangema3 *  3
+lower3 = ma3 - rangema3 *  3
+
+plot_color_3 = ma3 >= ma3[1] ? blue : red
+plot(upper3, color=plot_color_3, title="Upper", style=circles)
+plot(lower3, color=plot_color_3, title="Lower", style=circles)
+// // fill(u, l, color=c)

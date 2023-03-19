@@ -1,0 +1,8 @@
+//@version=3
+study(title="QS Smoother Awesome Oscillator", shorttitle="AO")
+ao = sma(hl2,5) - sma(hl2,34)
+ao2 = linreg(sma(hl2,8) - sma(hl2,55), 5, 0)
+
+plot(ao2, color = change(ao) <= 0 ? orange : blue, style=line)
+
+plot(ao, color = change(ao) <= 0 ? red : green, style=line)

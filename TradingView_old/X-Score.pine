@@ -1,0 +1,32 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+//@version=3
+study("X-Score", shorttitle="X-Score")
+length=input(21)
+
+vix = security("VIX", period, close)
+
+price = wma(vix, 3)
+
+
+calc_zvwap(pds) =>
+	mean = wma(price, length)
+	vwapsd = sqrt(sma(pow(price-mean, 2), pds) )
+	(price-mean)/vwapsd
+
+plot(0)
+upperTop=input(2.5)
+upperBottom=input(2.0)
+lowerTop=input(-2.5)
+lowerBottom=input(-2.0)
+
+plot(1, style=3, color=gray), plot(-1, style=3, color=gray)
+ul1=plot(upperTop, "OB High")
+ul2=plot(upperBottom, "OB Low")
+fill(ul1,ul2, color=red)
+ll1=plot(lowerTop, "OS High")
+ll2=plot(lowerBottom, "OS Low")
+fill(ll1,ll2, color=green)
+
+plot(-calc_zvwap(length)  ,title="x-score",color=black, linewidth=2)

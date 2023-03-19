@@ -1,0 +1,26 @@
+//@version=2
+study("QS Jamaica Setup", overlay=true)
+
+useTrueRange = input(true)
+length = input(21, minval=1)
+mult = input(0.618)
+mult2 = input(2.236)
+multAlert = input(3.14)
+src = input(hl2, title="Source")
+
+longTrendLength = input(200, title="Long Trend Lenght")
+
+ma = ema(src, length)
+range = useTrueRange ? tr : high - low
+rangema = ema(range, length)
+upper = ma + rangema * mult
+second_upper = ma + rangema * mult2
+lower = ma - rangema * mult
+second_lower = ma - rangema * mult2
+
+Alertupper = ma + rangema * multAlert
+Alertlower = ma - rangema * multAlert
+
+barc = close > lower and close < upper ? yellow : close < lower and close > second_lower  ? red : close < second_lower ? #AA0000 : close > upper and close < second_upper ? green : close > second_upper ? lime : na
+
+plotbar(open, high, low, close, color=barc)

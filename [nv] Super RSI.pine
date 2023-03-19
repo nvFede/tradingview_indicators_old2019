@@ -1,0 +1,46 @@
+study('[nv]SuperRSI', overlay=false)
+
+tickerWeek = security(tickerid,"W", hlc3)
+theTicker = security(tickerid, "M", hlc3)
+
+the_vwap = vwap(theTicker)
+
+vwapRsi = rsi(the_vwap, 14)
+longRSI = rsi(tickerWeek, 14)
+
+
+// plot(commonRsi, color=isRsiAbove50, linewidth=2, transp=20)
+plot(vwapRsi, color=white, linewidth=2,transp=50)
+
+plot(longRSI, color=yellow, linewidth=2, transp=20)
+//////////////////////////////////
+//         RSI SEMANAL          //
+//////////////////////////////////
+src = input(hlc3)
+tw = time("W")
+startWeek = na(tw[1]) or tw > tw[1]
+sumSrcWeek = src * volume
+sumVolWeek = volume
+sumSrcWeek := startWeek ? sumSrcWeek : sumSrcWeek + sumSrcWeek[1]
+//sumVolWeek := startWeek ? sumVolWeek : sumVolWeek + sumVolWeek[1]
+//resultWeek = sumSrcWeek / sumVolWeek
+//////////////////////////////////
+//          RSI COMUN           //
+//////////////////////////////////
+
+commonRsiValue = input(title="Common RSI Value", defval = 14)
+commonRsi = rsi(close,commonRsiValue) 
+rsiColor = commonRsi > 50 and commonRsi > commonRsi[1] ? blue : commonRsi > 50 and commonRsi < commonRsi[1] ? #0388FF : commonRsi < 50 and commonRsi < commonRsi[1] ? red : commonRsi < 50 and commonRsi > commonRsi[1] ? orange : na
+plot(commonRsi, color=rsiColor, linewidth=2, transp=1)
+
+//////////////////////////////////
+//            FONDO             //
+//////////////////////////////////
+
+topLine = hline(30)
+bottomLine = hline(70)
+fill(topLine, bottomLine, color=white, transp=90)
+stopLine = hline(10)
+sbottomLine = hline(90)
+fill(topLine, stopLine, color=red, transp=90)
+fill(bottomLine, sbottomLine, color=green, transp=90)

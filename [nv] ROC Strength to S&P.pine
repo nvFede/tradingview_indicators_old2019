@@ -1,0 +1,28 @@
+//@version=3
+study("[nv] ROC Strength to S&P")
+
+
+SPX = security("SPX", period, close)
+
+
+currentTicker = security(tickerid, period, close)
+
+
+roc_spx = roc(SPX,8)
+roc_tick = roc(currentTicker, 8)
+
+
+str = (roc_tick - roc_spx ) * 100
+ema_str = ema( str, 3)
+
+
+
+roc_color = ema_str > 0 ? green : red
+
+
+
+
+
+plot(ema_str, style=columns, color=roc_color, title="Slow Trend")
+
+hline(0,title="Zero Line")

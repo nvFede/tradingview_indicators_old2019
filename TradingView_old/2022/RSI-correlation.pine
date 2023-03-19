@@ -1,0 +1,13 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © QuantStreet
+
+//@version=4
+study("RSI-Correlation")
+
+rsi_ = rsi(close, 14)
+
+cor = correlation(rsi_,close, 14) * 100
+
+plot((cor * rsi_) / 100, color=color.white)
+//plot(cor, color=color.white)
+plot(rsi_, color=color.yellow)

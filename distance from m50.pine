@@ -1,0 +1,33 @@
+//distance from MA50
+study("el Fede tremendo indicator", overlay=false)
+
+// tickers
+//tick = input(title="Symbol", type=symbol, defval="QQQ")
+NDX = close
+
+// moving averages
+
+MOV0 = input(title="EMA Period", type=integer, defval=50)
+myEma=sma(NDX, MOV0)
+
+result = (NDX *100) / myEma - 100
+
+//result = NDX - myEma
+
+MOV1 = input(title="averageEMA", type=integer, defval=12)
+MOV2 = input(title="averageEMA", type=integer, defval=26)
+averageEMA= wma(result, MOV1)
+averageEMA2= wma(result, MOV2)
+
+OUT0 = input(title="Upper Line", type=float, defval=7.5)
+OUT1 = input(title="Lower Line", type=float, defval=-7.5)
+h0 = hline(OUT0)
+h1 = hline(OUT1)
+hline(OUT0, linestyle = dotted, color = orange)
+hline(OUT1, linestyle = dotted, color = green)
+
+
+plot(averageEMA, color=red, style = line, linewidth = 2)
+plot(averageEMA2, color=green, style = line, linewidth = 2)
+//plot(NDX, color = white, style = line, linewidth = 2)
+plot(result, color = blue, style = line, linewidth = 3)

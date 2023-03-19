@@ -1,0 +1,22 @@
+//@version=3
+study(title="QS Institutional Moving Average OSC", shorttitle="QS IMA OSC", overlay=false)
+
+
+src = input(close, type=source)
+
+lenght50 = input(type=integer, defval=50, minval=0, title="MA 50")
+lenght100 = input(type=integer, defval=100, minval=0, title="MA 100")
+lenght200 = input(type=integer, defval=200, minval=0, title="MA 200")
+
+sma50 = ((sma(src, lenght50) * 100 ) / close ) - 100
+sma100 = ((sma(src, lenght100) * 100 ) / close) - 100
+sma200 = ((sma(src, lenght200) * 100 ) / close) - 100
+
+sma50_color = sma50 > 0 ? green:red
+sma100_color = sma100 >0 ? green:red
+sma200_color = sma200 > 0 ? green:red
+ 
+hline(0)
+plot(sma50, color=sma50_color, linewidth=2, title="SMA 50")
+plot(sma100, color=sma100_color, linewidth=3, title="SMA 100")
+plot(sma200, color=sma200_color, linewidth=4, title="SMA 200")

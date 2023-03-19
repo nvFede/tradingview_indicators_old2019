@@ -1,0 +1,124 @@
+study(title="[nv]SpectrumDEMA", overlay=true)
+
+use_vwap = input(false, title="use VWAP ?", type=bool)
+make_dema(x, y) => ( 2 * ema(x,y)) - (ema(round(ema(x,y)),y))
+// price
+the_vwap = vwap(hlc3)
+price = use_vwap ? close : vwap(hlc3)
+
+// tipo de media movil
+use_dema = input(false, title="use DEMA ?", type=bool)
+
+// mostrar el price
+show_price = input(false, title="show price?", type=bool)
+
+//SPECTRUM
+line_01 = use_dema ? make_dema(price,1) : ema(price,1)
+line_03 = use_dema ? make_dema(price,3) : ema(price,3)
+line_05 = use_dema ? make_dema(price,5) : ema(price,5)
+line_07 = use_dema ? make_dema(price,7) : ema(price,7)
+line_09 = use_dema ? make_dema(price,9) : ema(price,9)
+line_11 = use_dema ? make_dema(price,11) : ema(price,11)
+line_13 = use_dema ? make_dema(price,13) : ema(price,13)
+line_15 = use_dema ? make_dema(price,15) : ema(price,15)
+line_17 = use_dema ? make_dema(price,17) : ema(price,17)
+line_19 = use_dema ? make_dema(price,19) : ema(price,19)
+line_21 = use_dema ? make_dema(price,21) : ema(price,21)
+line_23 = use_dema ? make_dema(price,23) : ema(price,23)
+line_25 = use_dema ? make_dema(price,25) : ema(price,25)
+line_27 = use_dema ? make_dema(price,27) : ema(price,27)
+line_29 = use_dema ? make_dema(price,29) : ema(price,29)
+line_31 = use_dema ? make_dema(price,31) : ema(price,31)
+line_33 = use_dema ? make_dema(price,33) : ema(price,33)
+line_35 = use_dema ? make_dema(price,35) : ema(price,35)
+line_37 = use_dema ? make_dema(price,37) : ema(price,37)
+line_39 = use_dema ? make_dema(price,39) : ema(price,39)
+line_41 = use_dema ? make_dema(price,41) : ema(price,41)
+line_43 = use_dema ? make_dema(price,43) : ema(price,43)
+line_45 = use_dema ? make_dema(price,45) : ema(price,45)
+line_47 = use_dema ? make_dema(price,47) : ema(price,47)
+line_49 = use_dema ? make_dema(price,49) : ema(price,49)
+line_50 = use_dema ? make_dema(price,50) : ema(price,50)
+
+// LONG
+line_100 = use_dema ? make_dema(price,100) : ema(price,100)
+line_150 = use_dema ? make_dema(price,150) : ema(price,150)
+line_200 = use_dema ? make_dema(price,200) : ema(price,200)
+line_365 = use_dema ? make_dema(price,365) : ema(price,365)
+
+
+isAboveEma01 = line_01 > line_01[1] and line_01 > line_50 ? blue : line_01 > line_01[1] and line_01 < line_50 ? #cc00cc : line_01 < line_01[1] and line_01 > line_50 ? #0388FF : line_01 < line_01[1] and line_01 < line_50 ? #BD003A : na
+isAboveEma03 = line_03 > line_03[1] and line_03 > line_50 ? blue : line_03 > line_03[1] and line_03 < line_50 ? #cc00cc : line_03 < line_03[1] and line_03 > line_50 ? #0388FF : line_03 < line_03[1] and line_03 < line_50 ? #BD003A : na
+isAboveEma05 = line_05 > line_05[1] and line_05 > line_50 ? blue : line_05 > line_05[1] and line_05 < line_50 ? #cc00cc : line_05 < line_05[1] and line_05 > line_50 ? #0388FF : line_05 < line_05[1] and line_05 < line_50 ? #BD003A : na
+isAboveEma07 = line_07 > line_07[1] and line_07 > line_50 ? blue : line_07 > line_07[1] and line_07 < line_50 ? #cc00cc : line_07 < line_07[1] and line_07 > line_50 ? #0388FF : line_07 < line_07[1] and line_07 < line_50 ? #BD003A : na
+isAboveEma09 = line_09 > line_09[1] and line_09 > line_50 ? blue : line_09 > line_09[1] and line_09 < line_50 ? #cc00cc : line_09 < line_09[1] and line_09 > line_50 ? #0388FF : line_09 < line_09[1] and line_09 < line_50 ? #BD003A : na
+isAboveEma11 = line_11 > line_11[1] and line_11 > line_50 ? blue : line_11 > line_11[1] and line_11 < line_50 ? #cc00cc : line_11 < line_11[1] and line_11 > line_50 ? #0388FF : line_11 < line_11[1] and line_11 < line_50 ? #BD003A : na
+isAboveEma13 = line_13 > line_13[1] and line_13 > line_50 ? blue : line_13 > line_13[1] and line_13 < line_50 ? #cc00cc : line_13 < line_13[1] and line_13 > line_50 ? #0388FF : line_13 < line_13[1] and line_13 < line_50 ? #BD003A : na
+isAboveEma15 = line_15 > line_15[1] and line_15 > line_50 ? blue : line_15 > line_15[1] and line_15 < line_50 ? #cc00cc : line_15 < line_15[1] and line_15 > line_50 ? #0388FF : line_15 < line_15[1] and line_15 < line_50 ? #BD003A : na
+isAboveEma17 = line_17 > line_17[1] and line_17 > line_50 ? blue : line_17 > line_17[1] and line_17 < line_50 ? #cc00cc : line_17 < line_17[1] and line_17 > line_50 ? #0388FF : line_17 < line_17[1] and line_17 < line_50 ? #BD003A : na
+isAboveEma19 = line_19 > line_19[1] and line_19 > line_50 ? blue : line_19 > line_19[1] and line_19 < line_50 ? #cc00cc : line_19 < line_19[1] and line_19 > line_50 ? #0388FF : line_19 < line_19[1] and line_19 < line_50 ? #BD003A : na
+isAboveEma21 = line_21 > line_21[1] and line_21 > line_50 ? blue : line_21 > line_21[1] and line_21 < line_50 ? #cc00cc : line_21 < line_21[1] and line_21 > line_50 ? #0388FF : line_21 < line_21[1] and line_21 < line_50 ? #BD003A : na
+isAboveEma23 = line_23 > line_23[1] and line_23 > line_50 ? blue : line_23 > line_23[1] and line_23 < line_50 ? #cc00cc : line_23 < line_23[1] and line_23 > line_50 ? #0388FF : line_23 < line_23[1] and line_23 < line_50 ? #BD003A : na
+isAboveEma25 = line_25 > line_25[1] and line_25 > line_50 ? blue : line_25 > line_25[1] and line_25 < line_50 ? #cc00cc : line_25 < line_25[1] and line_25 > line_50 ? #0388FF : line_25 < line_25[1] and line_25 < line_50 ? #BD003A : na
+isAboveEma27 = line_27 > line_27[1] and line_27 > line_50 ? blue : line_27 > line_27[1] and line_27 < line_50 ? #cc00cc : line_27 < line_27[1] and line_27 > line_50 ? #0388FF : line_27 < line_27[1] and line_27 < line_50 ? #BD003A : na
+isAboveEma29 = line_29 > line_29[1] and line_29 > line_50 ? blue : line_29 > line_29[1] and line_29 < line_50 ? #cc00cc : line_29 < line_29[1] and line_29 > line_50 ? #0388FF : line_29 < line_29[1] and line_29 < line_50 ? #BD003A : na
+isAboveEma31 = line_31 > line_31[1] and line_31 > line_50 ? blue : line_31 > line_31[1] and line_31 < line_50 ? #cc00cc : line_31 < line_31[1] and line_31 > line_50 ? #0388FF : line_31 < line_31[1] and line_31 < line_50 ? #BD003A : na
+isAboveEma33 = line_33 > line_33[1] and line_33 > line_50 ? blue : line_33 > line_33[1] and line_33 < line_50 ? #cc00cc : line_33 < line_33[1] and line_33 > line_50 ? #0388FF : line_33 < line_33[1] and line_33 < line_50 ? #BD003A : na
+isAboveEma35 = line_35 > line_35[1] and line_35 > line_50 ? blue : line_35 > line_35[1] and line_35 < line_50 ? #cc00cc : line_35 < line_35[1] and line_35 > line_50 ? #0388FF : line_35 < line_35[1] and line_35 < line_50 ? #BD003A : na
+isAboveEma37 = line_37 > line_37[1] and line_37 > line_50 ? blue : line_37 > line_37[1] and line_37 < line_50 ? #cc00cc : line_37 < line_37[1] and line_37 > line_50 ? #0388FF : line_37 < line_37[1] and line_37 < line_50 ? #BD003A : na
+isAboveEma39 = line_39 > line_39[1] and line_39 > line_50 ? blue : line_39 > line_39[1] and line_39 < line_50 ? #cc00cc : line_39 < line_39[1] and line_39 > line_50 ? #0388FF : line_39 < line_39[1] and line_39 < line_50 ? #BD003A : na
+isAboveEma41 = line_41 > line_41[1] and line_41 > line_50 ? blue : line_41 > line_41[1] and line_41 < line_50 ? #cc00cc : line_41 < line_41[1] and line_41 > line_50 ? #0388FF : line_41 < line_41[1] and line_41 < line_50 ? #BD003A : na
+isAboveEma43 = line_43 > line_43[1] and line_43 > line_50 ? blue : line_43 > line_43[1] and line_43 < line_50 ? #cc00cc : line_43 < line_43[1] and line_43 > line_50 ? #0388FF : line_43 < line_43[1] and line_43 < line_50 ? #BD003A : na
+isAboveEma45 = line_45 > line_45[1] and line_45 > line_50 ? blue : line_45 > line_45[1] and line_45 < line_50 ? #cc00cc : line_45 < line_45[1] and line_45 > line_50 ? #0388FF : line_45 < line_45[1] and line_45 < line_50 ? #BD003A : na
+isAboveEma47 = line_47 > line_47[1] and line_47 > line_50 ? blue : line_47 > line_47[1] and line_47 < line_50 ? #cc00cc : line_47 < line_47[1] and line_47 > line_50 ? #0388FF : line_47 < line_47[1] and line_47 < line_50 ? #BD003A : na
+isAboveEma49 = line_49 > line_49[1] and line_49 > line_50 ? blue : line_49 > line_49[1] and line_49 < line_50 ? #cc00cc : line_49 < line_49[1] and line_49 > line_50 ? #0388FF : line_49 < line_49[1] and line_49 < line_50 ? #BD003A : na
+
+isAboveEma50 = line_50 > line_50[1] ? green : red
+
+isAboveEma100 = line_100 > line_100[1] and line_100 > line_365 ? blue : line_100 > line_100[1] and line_100 < line_365 ? #cc00cc : line_100 < line_100[1] and line_100 > line_365 ? #0388FF : line_100 < line_100[1] and line_100 < line_365 ? #BD003A : na
+isAboveEma150 = line_150 > line_150[1] and line_150 > line_365 ? blue : line_150 > line_150[1] and line_150 < line_365 ? #cc00cc : line_150 < line_150[1] and line_150 > line_365 ? #0388FF : line_150 < line_150[1] and line_150 < line_365 ? #BD003A : na
+isAboveEma200 = line_200 > line_200[1] and line_200 > line_365 ? blue : line_200 > line_200[1] and line_200 < line_365 ? #cc00cc : line_200 < line_200[1] and line_200 > line_365 ? #0388FF : line_200 < line_200[1] and line_200 < line_365 ? #BD003A : na
+
+isAboveEma200bg = line_200 > line_200[1] ? green : red
+
+isAboveEma365 = line_365 > line_365[1] ? blue : red
+
+// ploteado
+plot(line_01, linewidth=2, color=isAboveEma01, transp=50)
+plot(line_03, linewidth=2, color=isAboveEma03, transp=50)
+plot(line_05, linewidth=2, color=isAboveEma05, transp=50)
+plot(line_07, linewidth=2, color=isAboveEma07, transp=50)
+plot(line_09, linewidth=2, color=isAboveEma09, transp=50)
+plot(line_11, linewidth=2, color=isAboveEma11, transp=50)
+plot(line_13, linewidth=2, color=isAboveEma13, transp=50)
+plot(line_15, linewidth=2, color=isAboveEma15, transp=50)
+plot(line_17, linewidth=2, color=isAboveEma17, transp=50)
+plot(line_19, linewidth=2, color=isAboveEma19, transp=50)
+plot(line_21, linewidth=2, color=isAboveEma21, transp=50)
+plot(line_23, linewidth=2, color=isAboveEma23, transp=50)
+plot(line_25, linewidth=2, color=isAboveEma25, transp=50)
+plot(line_27, linewidth=2, color=isAboveEma27, transp=50)
+plot(line_29, linewidth=2, color=isAboveEma29, transp=50)
+plot(line_31, linewidth=2, color=isAboveEma31, transp=50)
+plot(line_33, linewidth=2, color=isAboveEma33, transp=50)
+plot(line_35, linewidth=2, color=isAboveEma35, transp=50)
+plot(line_37, linewidth=2, color=isAboveEma37, transp=50)
+plot(line_39, linewidth=2, color=isAboveEma39, transp=50)
+plot(line_41, linewidth=2, color=isAboveEma41, transp=50)
+plot(line_43, linewidth=2, color=isAboveEma43, transp=50)
+plot(line_45, linewidth=2, color=isAboveEma45, transp=50)
+plot(line_47, linewidth=2, color=isAboveEma47, transp=50)
+plot(line_49, linewidth=2, color=isAboveEma49, transp=50)
+
+plot(line_50, linewidth=3, color=isAboveEma50, transp=0)
+
+plot(line_100, linewidth=3, color=isAboveEma100)
+plot(line_150, linewidth=4, color=isAboveEma150)
+
+plot(line_200, linewidth=5, color=isAboveEma200bg, transp=0)
+plot(line_200, linewidth=3, color=isAboveEma200, transp=50)
+plot(line_365, linewidth=6, color=isAboveEma365)
+
+show = show_price ? close : na
+
+plot(show, linewidth=2, color=close > close[1] ? yellow : orange) 

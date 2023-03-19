@@ -1,0 +1,95 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("Sector AD")
+
+xlb = security("XLB", timeframe.period, close)
+xlc = security("XLC", timeframe.period, close)
+xle = security("XLE", timeframe.period, close)
+xlf = security("XLF", timeframe.period, close)
+xli = security("XLI", timeframe.period, close)
+xlk = security("XLK", timeframe.period, close)
+xlp = security("XLP", timeframe.period, close)
+xlre = security("XLRE", timeframe.period, close)
+xlu = security("XLU", timeframe.period, close)
+xlv = security("XLV", timeframe.period, close)
+xly = security("XLY", timeframe.period, close)
+
+SPY = security("SPY", timeframe.period, close)
+
+positive = 0.0
+negative = 0.0
+
+if (xlb > xlb[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+    
+if (xlc > xlc[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+
+if (xle > xle[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+
+if (xlf > xlf[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+    
+if (xli > xli[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+
+if (xlk > xlk[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+    
+if (xlp > xlp[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+    
+if (xlre > xlre[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+
+if (xlu > xlu[1])
+    positive := positive + 1
+else 
+    negative := negative + 1     
+ 
+if (xlv > xlv[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+
+if (xly > xly[1])
+    positive := positive + 1
+else 
+    negative := negative + 1 
+
+AD = positive / negative
+s = sma(AD, 20)
+
+plot(s)
+hline(0)
+
+plot( sma(s, 20) )
+plot( sma(s,50) )
+
+
+// Sector weight performance on SPY 
+// handle moving averages of sector weighted crossing. 
+
+Medir el porcentaje de los ultimos 5 o 10 dias, para tener linea de tendencia 
+y multiplicarlo por el peso del sector en el indice. 
+
+

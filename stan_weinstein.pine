@@ -1,0 +1,5 @@
+study("stan wein", overlay=true)
+use_wma = input(true, title = "Use Stan Weinstein WMA ? ", type=bool)
+htf_ma2 = use_wma ? wma(close, 30) : na
+out = security(tickerid, "W", htf_ma2)
+plot(out, color=red, linewidth=2, style=circles)

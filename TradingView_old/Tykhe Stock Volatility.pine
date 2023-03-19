@@ -1,0 +1,53 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("Tykhe Stock Volatility", shorttitle="stock vol")
+
+
+spx_high = security("SPX", timeframe.period, high)
+spx_low = security("SPX", timeframe.period, low)
+spxx_close = security("SPX", timeframe.period, close)
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+
+val = input(20)
+
+h = input(high)
+
+
+
+stock_vol_short_period = (highest(high, val) - low) / highest(high, val) * 100
+
+stock_vol_long_period = (highest(high, val * 10) - low) / highest(high, val * 10) * 100
+
+vix_short_period = (highest(spx_high, val) - spx_low) / highest(spx_high, val) * 100
+vix_long_period = (highest(spx_high, val * 10) - spx_low) / highest(spx_high, val * 10) * 100
+
+
+
+
+
+
+//plot(short_vix, color=color.red)
+
+stock_VIX = linreg(stock_vol_short_period + stock_vol_long_period, 5, 0) 
+
+market_VIX = linreg(vix_short_period + vix_long_period, 5, 0) 
+
+tvix_color = stock_VIX > 0 ? bull_color : bear_color
+
+//plot(tVIX, style=plot.style_histogram, color=tvix_color)
+
+bank_vol = stock_VIX - market_VIX
+
+//plot(sma(tVIX, 200))
+s = wma(bank_vol, 120) 
+a = ( stock_VIX * 100 / s )
+
+plot( - s)
+plot( - wma(bank_vol, 10), color=color.red)
+//hline(0)

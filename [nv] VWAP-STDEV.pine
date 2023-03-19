@@ -1,0 +1,111 @@
+//@version=1
+study(title="[nv]VWAP-STDEV", shorttitle="[nv]VWAP_DEV", overlay=true)
+
+// src = input(hlc3)
+
+// VWAP por semana
+
+// t_week = time("W")
+// startWeek = na(t_week[1]) or t_week > t_week[1]
+// sumSrcWeek = src * volume
+// sumVolWeek = volume
+// sumSrcWeek := startWeek ? sumSrcWeek : sumSrcWeek + sumSrcWeek[1]
+// sumVolWeek := startWeek ? sumVolWeek : sumVolWeek + sumVolWeek[1]
+// resultWeek = sumSrcWeek / sumVolWeek
+
+
+// tmes = time("M")
+// startMonth = na(tmes[1]) or tmes > tmes[1]
+// sumSrcMonth = src * volume
+// sumVolMonth = volume
+// sumSrcMonth := startMonth ? sumSrcMonth : sumSrcMonth + sumSrcMonth[1]
+// sumVolMonth := startMonth ? sumVolMonth : sumVolMonth + sumVolMonth[1]
+// resultMonth = sumSrcMonth / sumVolMonth
+
+
+// // VWAP Mensual
+// // the_monthly_vwap = make_monthly_vwap()
+// vwapRsi = rsi(resultMonth, 14)
+// plot(vwapRsi, color=white, linewidth=2,transp=50)
+
+// // Mostrar RSI comun
+// commonRsi = rsi(close,commonRsiValue) 
+// isRsiAbove50 = commonRsi > 50 ? blue : red
+// plot(commonRsi, color=isRsiAbove50, linewidth=2, transp=20)
+
+
+
+// study('[nv]SuperRSI', overlay=false)
+
+// tickerWeek = security(tickerid,"W", close)
+// theTicker = security(tickerid, "3M", hlc3)
+
+// the_vwap = vwap(theTicker)
+// commonRsiValue = input(title="Common RSI Value", defval = 14)
+
+// commonRsi = rsi(close,commonRsiValue) 
+// isRsiAbove50 = commonRsi > 50 ? blue : red
+// isRsiTrendUp = commonRsi > commonRsi[1] ? green : orange
+
+// vwapRsi = rsi(the_vwap, 14)
+
+// longRSI = rsi(tickerWeek, 14)
+
+// plot(commonRsi, color=isRsiTrendUp, linewidth=2, transp=20)
+// plot(commonRsi, color=isRsiAbove50, linewidth=2, transp=20)
+// plot(vwapRsi, color=white, linewidth=2,transp=50)
+
+// plot(longRSI, color=yellow, linewidth=2, transp=20)
+
+// topLine = hline(30)
+// bottomLine = hline(70)
+// fill(topLine, bottomLine, color=white, transp=90)
+
+// stopLine = hline(10)
+// sbottomLine = hline(90)
+// fill(topLine, stopLine, color=red, transp=90)
+// fill(bottomLine, sbottomLine, color=green, transp=90)
+
+src = input(hlc3)
+
+// VWAP por semana
+tw = time("W")
+startWeek = na(tw[1]) or tw > tw[1]
+sumSrcWeek = src * volume
+sumVolWeek = volume
+sumSrcWeek := startWeek ? sumSrcWeek : sumSrcWeek + sumSrcWeek[1]
+sumVolWeek := startWeek ? sumVolWeek : sumVolWeek + sumVolWeek[1]
+resultWeek = sumSrcWeek / sumVolWeek
+
+// VWAP por Mes
+tmes = time("M")
+startMonth = na(tmes[1]) or tmes > tmes[1]
+sumSrcMonth = src * volume
+sumVolMonth = volume
+sumSrcMonth := startMonth ? sumSrcMonth : sumSrcMonth + sumSrcMonth[1]
+sumVolMonth := startMonth ? sumVolMonth : sumVolMonth + sumVolMonth[1]
+resultMonth = sumSrcMonth / sumVolMonth
+
+
+// VWAP por Cuarto
+tQtr = time("3M")
+startQtr = na(tQtr[1]) or tQtr > tQtr[1]
+sumSrcQtr = src * volume
+sumVolQtr = volume
+sumSrcQtr := startQtr ? sumSrcQtr : sumSrcQtr + sumSrcQtr[1]
+sumVolQtr := startQtr ? sumVolQtr : sumVolQtr + sumVolQtr[1]
+resultQtr = sumSrcQtr / sumVolQtr
+
+// VWAP por Mes
+tyear = time("12M")
+startYear = na(tyear[1]) or tyear > tyear[1]
+sumSrcYear = src * volume
+sumVolYear = volume
+sumSrcYear := startYear ? sumSrcYear : sumSrcYear + sumSrcYear[1]
+sumVolYear := startYear ? sumVolYear : sumVolYear + sumVolYear[1]
+resultYear = sumSrcYear / sumVolYear
+
+plot(resultWeek, title="VWAP Week",linewidth = 2, color=white)
+plot(resultMonth, title="VWAP Month",linewidth = 2, color=yellow)
+plot(resultQtr, title="VWAP Quarter",linewidth = 2, color=orange)
+plot(resultYear, title="VWAP Year",linewidth = 2, color=red)

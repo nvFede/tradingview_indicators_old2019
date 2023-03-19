@@ -1,0 +1,48 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © QuantStreet
+
+study("QS HWAP", shorttitle="HWAP")
+length = input(20)
+smoothness = input(3)
+
+src = input(close)
+
+
+//--------------------------- Hull Moving average -----------------------------------
+hull(x, longitud) =>
+    hullma = wma(2*wma(x, longitud/2)-wma(x, longitud), round(sqrt(longitud)))
+
+
+calc_zvwap(pds) =>
+    //mean = sum(volume * close, pds) / sum(volume, pds)
+    mean = hull(src, 50)
+    vwapsd = sqrt(sma(pow(close - mean, 2), pds))
+    (close - mean) / vwapsd
+
+plot(0)
+upperTop = input(25)
+upperBottom = input(20)
+lowerTop = input(-25)
+lowerBottom = input(-20)
+
+//plot(1, style=3, color=color.gray)
+//plot(-1, style=3, color=color.gray)
+ul1 = plot(upperTop, "OB High")
+ul2 = plot(upperBottom, "OB Low")
+fill(ul1, ul2, color=color.red)
+ll1 = plot(lowerTop, "OS High")
+ll2 = plot(lowerBottom, "OS Low")
+fill(ll1, ll2, color=color.green)
+
+wvap_smoothness = ema(calc_zvwap(length), smoothness) * 10
+
+plot(wvap_smoothness, title="ZVWAP", color=color.green, linewidth=2)
+
+// Correlation HWAP y activo
+
+c = correlation(wvap_smoothness, close, 21) * 25
+plot(c)
+
+finalCorrelation = correlation(c, wvap_smoothness, 21) * 25
+plot(-finalCorrelation, color=color.red)

@@ -1,0 +1,38 @@
+//@version=4
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+study("Tykhe Vix", shorttitle="tVIX")
+
+bull_color = #058ac5
+indecision_color = #dde4c5
+bear_color = #ff583e
+
+vix_high = security("SPX", timeframe.period, high)
+vix_low = security("SPX", timeframe.period, low)
+vix_close = security("SPX", timeframe.period, close)
+
+val = input(20)
+
+h = input(high)
+
+
+
+short_vix = (highest(vix_high, val) - vix_low) / highest(vix_high, val) * 100
+
+long_vix = (highest(vix_high, val * 10) - vix_low) / highest(vix_high, val * 10) * 100
+
+
+
+
+
+
+
+//plot(short_vix, color=color.red)
+
+tVIX = linreg(long_vix + short_vix, 5, 0) - 11
+
+tvix_color = tVIX > 0 ?bear_color : bull_color  
+
+plot(-tVIX, style=plot.style_histogram, color=tvix_color)
+hline(0)

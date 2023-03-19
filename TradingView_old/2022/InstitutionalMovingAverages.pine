@@ -1,0 +1,48 @@
+//@version=4
+study(title="QS Institutional Moving Averages", overlay=true)
+
+//
+//  Inputs
+//
+// Fuente de datos
+src = input(close, type=input.source)
+// Input Medias moviles
+lenght50 = input(type=input.integer, defval=50, minval=0, title="MA 50")
+lenght100 = input(type=input.integer, defval=100, minval=0, title="MA 100")
+lenght200 = input(type=input.integer, defval=200, minval=0, title="MA 200")
+// Plot Backgorund conditional
+plotBG = input(defval=true, title="Plot Background color?", type=input.bool)
+
+// Calculo medias moviles
+sma50 = sma(src, lenght50)
+sma100 = sma(src, lenght100)
+sma200 = sma(src, lenght200)
+
+
+// Color medias moviles
+sma50Color = sma50 > sma50[1] ? color.green : color.red
+sma100Color = sma100 > sma100[1] ? color.green : color.red
+sma200Color = sma200 > sma200[1] ? color.green : color.red
+
+// Plot Medias moviles
+plot(sma50, color=sma50Color, linewidth=2, title="SMA 50")
+plot(sma100, color=sma100Color, linewidth=3, title="SMA 100")
+plot(sma200, color=close > sma200 ? color.yellow : color.orange, linewidth=5, transp=50, title="Close > SMA 200")
+plot(sma200, color=sma200Color,style=plot.style_circles, linewidth=2, title="SMA 200")
+
+
+// Plot Backgrounds
+// BG SMA200
+bgcolor( close > sma200 and plotBG ? color.green : close < sma200 and plotBG ? color.red : na, transp=50)
+// BG SMA50
+//bgcolor( close > sma50 ? color.yellow : color.orange, transp=50)
+
+
+// Alerts
+goldenCross = crossover(sma50, sma200)
+if goldenCross
+    alert("Golden Cross")
+
+deathCross = crossunder(sma50, sma200)
+if deathCross
+    alert( "Death Cross" )

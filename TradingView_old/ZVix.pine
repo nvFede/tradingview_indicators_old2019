@@ -1,0 +1,46 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+
+//@version=3
+study("Vix Sentiment", shorttitle="Vix Sentiment")
+length=input(50)
+
+vix_close = security("VIX", period, close)
+spx_close = security("SPX", period, close)
+
+smoothness = input(title="Smoothnees", defval=3, minval=0)
+
+mean_line = input(title="Mean Length", defval=100, minval=0) 
+
+ratio = spx_close / vix_close 
+
+bg_sma = sma(ratio, 200)
+bg_color = ratio > bg_sma ? green : red
+
+calc_zvwap(pds) =>
+	mean = wma(ratio, length)
+	vwapsd = sqrt(sma(pow(ratio-mean, 2), pds) )
+	(ratio-mean)/vwapsd
+
+
+
+plot(0)
+upperTop=input(5) * 10
+upperBottom=input(5.0) * 10
+lowerTop=input(-5) * 10
+lowerBottom=input(-5.0) * 10
+
+line_color = black
+
+plot(10, style=dashed, color=gray), plot(-10, style=dashed, color=gray)
+
+
+zwap = ema( calc_zvwap(length), smoothness ) * 20
+
+zwap_correlation = correlation(zwap, close, 10) * 20
+
+
+plot(zwap_correlation, color=white, linewidth=2)
+plot(zwap,title="ZVWAP",color=zwap > 0 ? green : red,style=columns, linewidth=2)
+bgcolor(bg_color)

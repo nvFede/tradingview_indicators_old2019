@@ -1,0 +1,40 @@
+study("[nv] RSC Mansfield")
+
+index = input(title="Index", type=symbol, defval="AMEX:SPY")
+sector = input(title="Sector (optional)", type=symbol, defval="AMEX:SPY")
+industry = input(title="Industry (optional)", type=symbol, defval="AMEX:SPY")
+
+ma_type = input(title="Which moving average to use?", defval="SMA")
+len_daily = input(title="MA length for Daily", defval=200)
+len_weekly = input(title="MA length for Weekly", defval=52)
+len_monthly = input(title="MA length for Monthly", defval=10)
+len_other = input(title="MA length for all other periods", defval=52)
+val = close
+
+
+len = period == "W" ? len_weekly : (period == "D" ? len_daily : (period == "M" ? len_monthly : len_other))
+
+ma_func(x, length) =>
+    ma_type == "WMA" ? wma(x, length) : (ma_type == "SMA" ? sma(x, length) : ema(x, length))
+
+
+calc_mrs_func(x, ind, length) =>
+    ((x / security(ind, period, x)) / ma_func((x / security(ind, period, x)), length) - 1) * 10
+
+
+mrs_index = calc_mrs_func(val, index, len)
+
+mrs_index_fast = sma(mrs_index, 5)
+mrs_index_slow = sma(mrs_index, 25)
+
+mrs_sector = calc_mrs_func(val, sector, len)
+mrs_industry = calc_mrs_func(val, industry, len)
+c = sign(mrs_index) + sign(mrs_sector) + sign(mrs_industry)
+
+bgcolor(c == 3 ? color(green, 80) : c == 2 ? color(green, 75) : c == 1 ? color(green, 70) : c == -1 ? color(red, 70) : c == -2 ? color(red, 75) : c == -3 ? color(red, 80) : gray)
+//plot(mrs_index, linewidth=3, title="MRS index", linewidth=2, color=red)
+plot(mrs_index_fast, linewidth=1, title="MRS index", style=line)
+plot(mrs_index_slow, linewidth=1, title="MRS index", style=line)
+plot(mrs_sector != mrs_index ? mrs_sector : na, linewidth=2, title="MRS sector")
+plot(mrs_industry != mrs_index ? mrs_industry : na, linewidth=1, title="MRS industry")
+hline(price=0, linestyle=dashed, title="Zero baseline")

@@ -1,0 +1,48 @@
+//@version=3
+study(title="[nv]Trend Waves", shorttitle="[nv]Waves-D")
+
+
+dema(x,y) =>
+	e1 = ema(x, y)
+	e2 = ema(e1, y)
+	dema = 2 * e1 - e2
+
+show_fast = input(true, title="Show fast trend ? ", type=bool)
+show_medium = input(true, title="Show medium trend? ", type=bool)
+show_slow = input(true, title="Show slow trend ? ", type=bool)
+
+use_acceleration = input(false, title="Use Acceleration ? ", type=bool)
+
+// Getting inputs
+fast_length = input(title="Fast Length", type=integer, defval=12)
+slow_length = input(title="Slow Length", type=integer, defval=26)
+src = input(title="Source", type=source, defval=close)
+signal_length = input(title="Signal Smoothing", type=integer, minval = 1, maxval = 50, defval = 9)
+sma_source = input(title="Simple MA(Oscillator)", type=bool, defval=false)
+sma_signal = input(title="Simple MA(Signal Line)", type=bool, defval=false)
+
+
+
+// Calculating
+fast_ma = use_acceleration ? dema(src, fast_length) : ema(src, fast_length)
+slow_ma = use_acceleration ? dema(src, slow_length) : ema(src, slow_length)
+fast_macd = fast_ma - slow_ma
+fast_signal = use_acceleration ? dema(fast_macd, signal_length) : ema(fast_macd, signal_length)
+
+
+
+// Plot colors
+col_grow_above = #26A69A
+col_grow_below = #FFCDD2
+col_fall_above = #B2DFDB
+col_fall_below = #EF5350
+
+col_fast_macd = fast_macd > fast_macd[1] ? yellow : orange
+col_fast_signal = #ff6a00
+
+plot_fast_d = plot(fast_macd, title="Fast Trend", color=col_fast_macd, transp=0, linewidth=1)
+plot_fast_s = plot(fast_signal, title="Fast Signal", color=col_fast_signal, transp=90)
+
+plot_fast_fill = fast_macd > fast_signal ? green : red
+
+fill(plot_fast_d,plot_fast_s, color=plot_fast_fill, transp=0)

@@ -1,0 +1,26 @@
+//version=3
+study("[nv] Percentage S&P 500 above 50 & 200", overlay=false)
+
+s50 = input(title="Symbol", type=symbol, defval="S5FI")
+s200 = input(title="Symbol", type=symbol, defval="S5TH")
+
+OUT70 = input(title="Upper Line", type=float, defval=70)
+OUT50 = input(title="Middle Line", type=float, defval=50)
+OUT30 = input(title="Lower Line", type=float, defval=30)
+
+LIN1 = security(s50, period, close)
+LIN2 = security(s200, period, close)
+
+h0 = hline(OUT70)
+h1 = hline(OUT50)
+h2 = hline(OUT30)
+
+//fill(h0,h1, color= white, transp=90)
+
+hline(OUT70, linestyle = dotted, color = green)
+hline(OUT50, linestyle = dotted, color = orange)
+hline(OUT30, linestyle = dotted, color = red)
+
+
+plot((LIN1), color = blue, style = line, linewidth = 3)
+plot((LIN2), color = orange, style = line, linewidth = 3)

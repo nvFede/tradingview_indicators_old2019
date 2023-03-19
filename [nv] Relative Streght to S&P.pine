@@ -1,0 +1,26 @@
+//@version=3
+study("[nv] relative Strength to S&P")
+
+
+SPX = security("SPX", "D", close)
+SPX_D = security("SPX", "D", close)
+
+
+currentTicker = security(tickerid, period, close)
+currentTicker_D = security(tickerid, period, close)
+
+ratio1 = currentTicker / SPX
+
+ratio_2 = currentTicker_D / SPX_D
+
+calculo = (ratio1 / wma(ratio1,52) - 1) * 10 
+
+calculo2 = (ratio_2 / wma(ratio_2,17) - 1) * 10 
+
+wma_color = calculo > 0 ? green : red
+sma_color = calculo2 > 0  ? yellow : orange
+
+plot(calculo2, style=line, linewidth=2, color=sma_color, title="Fast Trend")
+plot(calculo, style=columns, color=wma_color, title="Slow Trend")
+
+hline(0,title="Zero Line")

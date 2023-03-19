@@ -1,0 +1,65 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Tykhe_Ideas
+
+
+//version=3
+study("Stocks  - ABOVE - Indicators", overlay=false)
+
+
+show_s50 = input(type=bool, title="Show SP500 stocks above 50 day moving average?", defval=true)
+show_s200 = input(type=bool, title="Show SP500 stocks above 200 day moving average?", defval=true)
+show_n50 = input(type=bool, title="Show Nasdaq stocks above 50 day moving average?", defval=true)
+show_n200 = input(type=bool, title="Show Nasdaq stocks above 200 day moving average?", defval=true)
+show_d50 = input(type=bool, title="Show Dow Jones stocks above 50 day moving average?", defval=true)
+show_d200 = input(type=bool, title="Show Dow Jones stocks above 200 day moving average?", defval=true)
+show_r50 = input(type=bool, title="Show Russell 2000 stocks above 50 day moving average?", defval=true)
+show_r200 = input(type=bool, title="Show Russell 2000 stocks above 200 day moving average?", defval=true)
+
+show_combined50 = input(type=bool, title="Show combined all above 50MA in one line?", defval=false)
+
+show_combined200 = input(type=bool, title="Show combined all above 200MA in one line?", defval=false)
+
+show_combined = input(type=bool, title="Show all combined in one line?", defval=false)
+
+
+smoothness = input(type=bool, title="Add 5 day factor smoothness?", defval=false)
+
+OUT70 = input(title="Upper Line", type=float, defval=80)
+OUT50 = input(title="Middle Line", type=float, defval=50)
+OUT30 = input(title="Lower Line", type=float, defval=20)
+
+s50 = security("S5FI", period, close)
+s200 = security("S5TH", period, close)
+n50 = security("NDFI", period, close)
+n200 = security("NDTH", period, close)
+d50 = security("DCFI", period, close)
+d200 = security("DITH", period, close)
+r50 = security("R2FI", period, close)
+r200 = security("R2TH", period, close)
+
+combo = ( s50 + s200 + n50 + n200 + d50 + d200 + r50 + r200 ) / 8
+combo50 = ( s50  + n50  + d50  + r50  ) / 4
+combo200 = ( s200  + n200 +  d200 +  r200 ) / 4
+
+
+//fill(h0,h1, color= white, transp=90)
+
+hline(OUT70, linestyle = dotted, color = green)
+hline(OUT50, linestyle = dotted, color = orange)
+hline(OUT30, linestyle = dotted, color = red)
+
+
+plot( show_s50 ? smoothness ? sma(s50, 5) : s50 : na , color = blue, style = line, linewidth = 2, title="SP500 above 50 day MA")
+plot( show_s200 ? smoothness ? sma(s200, 5) : s200 : na , color = orange, style = line, linewidth = 2, title="SP500 above 200 day MA")
+plot( show_n50 ? smoothness ? sma(n50, 5) : n50 : na , color = red, style = line, linewidth = 2, title="Nasdaq above 50 day MA")
+plot( show_n200 ?smoothness ? sma(n200, 5) :  n200 : na , color = gray, style = line, linewidth = 2, title="Nasdaq above 200 day MA")
+
+plot( show_d50 ? smoothness ? sma(d50, 5) : d50 : na , color = purple, style = line, linewidth = 2, title="DJI above 50 day MA")
+plot( show_d200 ? smoothness ? sma(d200, 5) : d200 : na , color = green, style = line, linewidth = 2, title="DJI above 200 day MA")
+plot( show_r50 ? smoothness ? sma(r50, 5) : d50 : na , color = white, style = line, linewidth = 2, title="Russell2000 above 50 day MA")
+plot( show_r200 ? smoothness ? sma(r200, 5) :  r200 : na , color = yellow, style = line, linewidth = 2, title="Russell2000 above 200 day MA")
+
+plot( show_combined50 ? smoothness ? sma(combo50, 5) : combo50 : na, color=lime, style=line, linewidth = 4, title="All above 50 combined" )
+plot( show_combined200 ? smoothness ? sma(combo200, 5) : combo200 : na, color=lime, style=line, linewidth = 4, title="All above 200 combined" )
+
+plot( show_combined ? smoothness ? sma(combo, 5) : combo : na, color=lime, style=line, linewidth = 4, title="All Combined" )

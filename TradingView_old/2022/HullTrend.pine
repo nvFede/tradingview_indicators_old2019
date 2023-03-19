@@ -1,0 +1,28 @@
+
+//@version=3
+study(title = "Hull MA", shorttitle="HMA", overlay = false)
+src = input(close, title="Source")
+
+
+mhull(src,len) => hullma = wma(2*wma(src, len/2)-wma(src, len), round(sqrt(len)))
+
+fast_in = input(21)
+not_fast_in = input(52)
+medium_in = input(100)
+slow_in = input(252)
+
+
+fast = mhull(close,fast_in)
+not_fast = mhull(close,not_fast_in)
+medium = mhull(close,medium_in)
+slow = mhull(close,slow_in)
+
+fast_c = fast < close? green : red
+not_fast_c = not_fast < close? green : red
+medium_c = medium < close? green : red
+slow_c = slow < close? green : red
+
+plot(2, color=fast_c, style=circles, linewidth=5)
+plot(1.5, color=not_fast_c, style=circles, linewidth=5)
+plot(1, color=medium_c, style=circles, linewidth=5)
+plot(0.5, color=slow_c, style=circles, linewidth=5)

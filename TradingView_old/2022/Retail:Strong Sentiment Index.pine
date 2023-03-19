@@ -1,0 +1,9 @@
+study("QS Retail/Strong Sentiment Index")
+
+retail = cum((open - close[1])) * 10
+
+retail_color = retail > 0 ? green  : red
+
+hline(0)
+
+plot(retail,color=retail_color, style=line, linewidth=3)

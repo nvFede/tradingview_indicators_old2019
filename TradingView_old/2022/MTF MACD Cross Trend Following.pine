@@ -1,0 +1,34 @@
+//@version=3
+study("MTF MACD Cross Trend Following", overlay=false)
+
+fast_ma = input(title='Fast ema',type=integer, defval=12, minval=0)
+slow_ma = input(title='Slow ema',type=integer, defval=26, minval=0)
+signal_ma = input(title='Signal',type=integer, defval=9, minval=0)
+
+
+ma_position(tmf, fast, slow, signal) =>
+    idx = security(tickerid, tmf, close)
+    [macdLine, signalLine, histLine] = macd(close, 12, 26, 9)
+    pos = macdLine >  signalLine ?  green : red
+    pos
+
+
+daily = ma_position('D', fast_ma, slow_ma, signal_ma)
+weekly = ma_position('W', fast_ma, slow_ma, signal_ma)
+
+_5min = ma_position("5", fast_ma, slow_ma, signal_ma)
+_15min = ma_position('15', fast_ma, slow_ma, signal_ma)
+_40min = ma_position('40', fast_ma, slow_ma, signal_ma)
+_80min = ma_position('80', fast_ma, slow_ma, signal_ma)
+_130min = ma_position('130', fast_ma, slow_ma, signal_ma)
+_195min = ma_position('195', fast_ma, slow_ma, signal_ma)
+
+
+plot(16, color=_5min[0], style=circles, linewidth=3)
+plot(14, color=_15min, style=circles, linewidth=3)
+plot(12, color=_40min, style=circles, linewidth=3)
+plot(10, color=_80min, style=circles, linewidth=3)
+plot(8, color=_130min, style=circles, linewidth=3)
+plot(6, color=_195min, style=circles, linewidth=3)
+plot(2, color=daily, style=circles, linewidth=3)
+plot(0, color=weekly, style=circles, linewidth=3)
